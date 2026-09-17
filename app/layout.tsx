@@ -1,0 +1,4 @@
+import "./globals.css";import {Header} from "@/components/header";import {Footer} from "@/components/footer";import {metadata as makeMeta,organizationJsonLd} from "@/lib/seo";
+export const metadata=makeMeta("MartEX","Practical software and technology solutions for organizations in Liberia and beyond.");
+const themeScript=`(()=>{try{const t=localStorage.getItem('martex-theme')||'system';const d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light'}catch(e){}})()`;
+export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:themeScript}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(organizationJsonLd())}}/></head><body><a className="skip" href="#main">Skip to content</a><Header/><main id="main">{children}</main><Footer/></body></html>}
