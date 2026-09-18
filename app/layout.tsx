@@ -4,6 +4,8 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ThemeProvider } from "@/components/layout/theme";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
+import { RouteTransition } from "@/components/motion/route-transition";
 import { themeInitScript } from "@/lib/theme-script";
 import { company } from "@/content/company";
 import { getSiteUrl } from "@/lib/utils";
@@ -38,11 +40,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="antialiased">
         <ThemeProvider>
+          <SmoothScroll />
           <a href="#main-content" className="skip-link">
             Skip to content
           </a>
           <Header />
-          <main id="main-content">{children}</main>
+          <main id="main-content">
+            <RouteTransition>{children}</RouteTransition>
+          </main>
           <Footer />
         </ThemeProvider>
       </body>

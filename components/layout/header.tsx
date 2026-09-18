@@ -6,6 +6,7 @@ import { Logo } from "@/components/logo";
 import { ThemeToggle } from "./theme";
 import { MegaMenu } from "./mega-menu";
 import { MobileMenu } from "./mobile-menu";
+import { HeaderProgressBar } from "@/components/motion/scroll-progress";
 import { cn } from "@/lib/utils";
 
 export function Header() {
@@ -45,6 +46,7 @@ export function Header() {
           <MobileMenu />
         </div>
       </div>
+      <HeaderProgressBar />
     </header>
   );
 }

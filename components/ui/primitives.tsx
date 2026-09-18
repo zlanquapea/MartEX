@@ -2,6 +2,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowRight, ArrowUpRight, Inbox, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SplitHeading } from "@/components/motion/split-heading";
+import { MagneticButton } from "@/components/motion/magnetic-button";
 
 type ButtonVariant = "primary" | "secondary" | "ghost";
 
@@ -14,7 +16,7 @@ const buttonVariants: Record<ButtonVariant, string> = {
 };
 
 const baseButtonClasses =
-  "group inline-flex min-h-12 items-center justify-center gap-2 rounded-full border px-6 text-sm font-semibold tracking-tight transition-all duration-200 focus-visible:outline-offset-4";
+  "btn-shimmer group inline-flex min-h-12 items-center justify-center gap-2 rounded-full border px-6 text-sm font-semibold tracking-tight transition-all duration-200 focus-visible:outline-offset-4";
 
 export function Button({
   href,
@@ -48,22 +50,26 @@ export function Button({
 
   if (external) {
     return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={cn(baseButtonClasses, buttonVariants[variant], className)}
-        {...props}
-      >
-        {content}
-      </a>
+      <MagneticButton>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(baseButtonClasses, buttonVariants[variant], className)}
+          {...props}
+        >
+          {content}
+        </a>
+      </MagneticButton>
     );
   }
 
   return (
-    <Link href={href} className={cn(baseButtonClasses, buttonVariants[variant], className)} {...props}>
-      {content}
-    </Link>
+    <MagneticButton>
+      <Link href={href} className={cn(baseButtonClasses, buttonVariants[variant], className)} {...props}>
+        {content}
+      </Link>
+    </MagneticButton>
   );
 }
 
@@ -101,7 +107,7 @@ export function SectionHeading({
   align = "split",
 }: {
   eyebrow?: string;
-  title: ReactNode;
+  title: string;
   description?: ReactNode;
   align?: "split" | "center";
 }) {
@@ -114,7 +120,11 @@ export function SectionHeading({
     >
       <div className={cn("max-w-xl", align === "center" && "max-w-2xl")}>
         {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-        <h2 className="mt-3 text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.05] tracking-tight">{title}</h2>
+        <SplitHeading
+          as="h2"
+          text={title}
+          className="mt-3 block text-[clamp(2rem,4.2vw,3.4rem)] leading-[1.05] tracking-tight"
+        />
       </div>
       {description && (
         <p className={cn("max-w-md text-base text-[var(--ink-muted)]", align === "center" && "max-w-2xl")}>

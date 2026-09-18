@@ -2,10 +2,12 @@
 
 import { useRef, type ReactNode } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { cn } from "@/lib/utils";
 
 /**
  * Wraps a CTA with a restrained magnetic pull toward the pointer. Disabled
- * automatically for touch input and reduced-motion preferences.
+ * automatically for touch input and reduced-motion preferences. Defaults
+ * to inline-block so wrapping a button never changes its layout footprint.
  */
 export function MagneticButton({ children, className }: { children: ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -35,7 +37,7 @@ export function MagneticButton({ children, className }: { children: ReactNode; c
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       style={{ x: springX, y: springY }}
-      className={className}
+      className={cn("inline-block", className)}
     >
       {children}
     </motion.div>

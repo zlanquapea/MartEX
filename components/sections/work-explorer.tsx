@@ -1,18 +1,20 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { caseStudies } from "@/content/case-studies";
 import { industries } from "@/content/solutions";
 import { services } from "@/content/services";
 import { CaseStudyCard } from "@/components/cards";
 import { EmptyState } from "@/components/ui/primitives";
+import { useIsReducedMotion } from "@/components/motion/use-reduced-motion";
 
 type FilterMode = "industry" | "service";
 
 export function WorkExplorer() {
   const [mode, setMode] = useState<FilterMode>("industry");
   const [active, setActive] = useState<string>("All");
+  const shouldReduceMotion = useIsReducedMotion();
 
   const serviceTitleBySlug = useMemo(() => new Map(services.map((service) => [service.slug, service.title])), []);
   const usedServiceSlugs = useMemo(() => Array.from(new Set(caseStudies.map((study) => study.serviceSlug))), []);
@@ -66,12 +68,21 @@ export function WorkExplorer() {
         ))}
       </div>
 
-      <motion.div layout className="mt-10 grid gap-5 lg:grid-cols-3">
-        {filtered.map((study) => (
-          <motion.div key={study.slug} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <CaseStudyCard caseStudy={study} />
-          </motion.div>
-        ))}
+      <motion.div layout={!shouldReduceMotion} className="mt-10 grid gap-5 lg:grid-cols-3">
+        <AnimatePresence mode="popLayout">
+          {filtered.map((study) => (
+            <motion.div
+              key={study.slug}
+              layout={!shouldReduceMotion}
+              initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.94 }}
+              transition={{ duration: shouldReduceMotion ? 0.01 : 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <CaseStudyCard caseStudy={study} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </motion.div>
 
       {filtered.length === 0 && (
