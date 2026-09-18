@@ -1,4 +1,55 @@
-import "./globals.css";import {Header} from "@/components/header";import {Footer} from "@/components/footer";import {metadata as makeMeta,organizationJsonLd} from "@/lib/seo";
-export const metadata=makeMeta("MartEX","Practical software and technology solutions for organizations in Liberia and beyond.");
-const themeScript=`(()=>{try{const t=localStorage.getItem('martex-theme')||'system';const d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light'}catch(e){}})()`;
-export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:themeScript}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(organizationJsonLd())}}/></head><body><a className="skip" href="#main">Skip to content</a><Header/><main id="main">{children}</main><Footer/></body></html>}
+import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import "./globals.css";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { ThemeProvider } from "@/components/layout/theme";
+import { themeInitScript } from "@/lib/theme-script";
+import { company } from "@/content/company";
+import { getSiteUrl } from "@/lib/utils";
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
+  title: {
+    default: `${company.name} | ${company.tagline}`,
+    template: `%s | ${company.name}`,
+  },
+  description: company.shortDescription,
+  icons: {
+    icon: "/icon",
+    apple: "/apple-icon",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8fafb" },
+    { media: "(prefers-color-scheme: dark)", color: "#07101f" },
+  ],
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning className={plusJakarta.variable}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="antialiased">
+        <ThemeProvider>
+          <a href="#main-content" className="skip-link">
+            Skip to content
+          </a>
+          <Header />
+          <main id="main-content">{children}</main>
+          <Footer />
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
