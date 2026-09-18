@@ -41,6 +41,14 @@ npm run typecheck  # tsc --noEmit
 Before considering a change complete, run `npm run lint`, `npm run typecheck`, and
 `npm run build` — all three must pass cleanly.
 
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every pull request into `main` and on every push to
+`main`: install with `npm ci`, then `npm run lint`, `npm run typecheck`, and `npm run build`
+(with a placeholder `NEXT_PUBLIC_SITE_URL` so the build has a valid canonical URL to render
+metadata against). Configure this workflow as a required status check in the repository's
+branch protection settings once the team is ready to enforce it on `main`.
+
 ## Project structure
 
 ```
