@@ -1,5 +1,12 @@
 export type Faq = { question: string; answer: string };
 
+export type Scenario = {
+  situation: string;
+  whatChanges: string;
+  howItOperates: string;
+  result: string;
+};
+
 export type Service = {
   slug: string;
   title: string;
@@ -12,6 +19,7 @@ export type Service = {
   useCases: string[];
   approach: string[];
   deliverables: string[];
+  scenario: Scenario;
   faqs: Faq[];
 };
 
@@ -60,6 +68,12 @@ export const services: Service[] = [
       "Handover and training session",
       "A maintenance and change-management plan",
     ],
+    scenario: {
+      situation: "A department runs its core work through a shared spreadsheet, several email threads, and one person's memory of how things are supposed to go.",
+      whatChanges: "MartEX maps that real workflow and rebuilds it as a single application shaped around it, not the other way around.",
+      howItOperates: "Staff log in to one system with the right view for their role; records, approvals, and history live in one place instead of scattered files.",
+      result: "Less duplicated data entry, a clear record of who did what, and a system that can grow as the team's needs change.",
+    },
     faqs: [
       {
         question: "How long does a custom build take?",
@@ -116,6 +130,12 @@ export const services: Service[] = [
       "Deployment and hosting guidance",
       "Ongoing maintenance and support options",
     ],
+    scenario: {
+      situation: "An organization's public service is only available by visiting an office during business hours, creating queues and repeat visits.",
+      whatChanges: "MartEX builds a secure web application so the same service is available directly from a browser, on any device.",
+      howItOperates: "The same interface reshapes itself for desktop, tablet, or phone, with role-based access separating staff, administrators, and the public.",
+      result: "Staff spend less time on routine counter service, and people can complete the same request without an in-person visit.",
+    },
     faqs: [
       {
         question: "Can the platform support many concurrent users?",
@@ -171,6 +191,12 @@ export const services: Service[] = [
       "Distribution and update guidance",
       "A maintenance and enhancement plan",
     ],
+    scenario: {
+      situation: "Field officers fill out paper forms at sites with little or no signal, then re-key everything into a computer once they're back at the office — sometimes days later.",
+      whatChanges: "MartEX builds a mobile app that captures the same data on-site, with or without a connection.",
+      howItOperates: "Entries are saved on the device while offline and sync automatically the moment a connection is available, with no extra step for the field officer.",
+      result: "Data reaches the office in near real time instead of days later, and nothing is lost to a damaged paper form.",
+    },
     faqs: [
       {
         question: "Do you build for iOS and Android?",
@@ -226,6 +252,12 @@ export const services: Service[] = [
       "Training for staff and administrators",
       "A support plan for ongoing adjustments",
     ],
+    scenario: {
+      situation: "A request has to pass through several people's inboxes for approval, and nobody — including the requester — can say where it currently sits.",
+      whatChanges: "MartEX rebuilds the process as a digital workflow with defined steps, owners, and rules.",
+      howItOperates: "Each request moves automatically to the next approver, with reminders for anything stalled and a visible status at every stage.",
+      result: "Approvals move at a predictable pace, and there is a complete record of who approved what, and when.",
+    },
     faqs: [
       {
         question: "Will automation remove necessary human review?",
@@ -281,6 +313,12 @@ export const services: Service[] = [
       "Migration validation summary",
       "Backup, retention, and maintenance plan",
     ],
+    scenario: {
+      situation: "Case files exist as a mix of paper folders, shared drive documents, and a few personal spreadsheets, so no one has one reliable view of a record.",
+      whatChanges: "MartEX consolidates that information into one structured, permission-controlled system.",
+      howItOperates: "Records are entered once, organized consistently, and retrievable by search instead of by remembering which folder they're in.",
+      result: "Finding a record takes seconds, and reporting no longer means manually reconciling several sources.",
+    },
     faqs: [
       {
         question: "Can historical records be migrated into the new system?",
@@ -336,6 +374,12 @@ export const services: Service[] = [
       "Monitoring and alerting setup",
       "A support plan for ongoing integration maintenance",
     ],
+    scenario: {
+      situation: "Finance, operations, and customer records live in three separate systems that don't talk to each other, so staff re-type the same information into each one.",
+      whatChanges: "MartEX builds the connections between them so information entered once flows to everywhere it's needed.",
+      howItOperates: "An update in one system triggers the corresponding update in the others, monitored so failures are caught rather than silently dropped.",
+      result: "One consistent version of the truth across systems, and far less manual re-entry.",
+    },
     faqs: [
       {
         question: "Can you integrate with our existing software vendors?",
@@ -391,6 +435,12 @@ export const services: Service[] = [
       "A prioritized delivery roadmap",
       "Optional support carrying the plan into implementation",
     ],
+    scenario: {
+      situation: "Leadership knows technology could help but faces conflicting advice, unclear requirements, and no agreed path forward.",
+      whatChanges: "MartEX runs a structured discovery to turn that uncertainty into a documented, prioritized plan.",
+      howItOperates: "Stakeholder interviews and operational review narrow a wide field of options down to a small set of recommended, sequenced next steps.",
+      result: "A clear, agreed roadmap that any qualified team — MartEX or otherwise — can implement with confidence.",
+    },
     faqs: [
       {
         question: "Does consulting commit us to building with MartEX?",

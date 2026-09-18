@@ -55,6 +55,22 @@ export const solutionCategories: SolutionCategory[] = [
   "Integrations",
 ];
 
+/** Cycles through the brand palette so each category reads distinctly
+ * without introducing an off-brand hue. */
+export const categoryAccents: Record<SolutionCategory, string> = {
+  "Sales & CRM": "var(--color-primary)",
+  "Inventory & Procurement": "var(--color-tech-blue)",
+  "Finance & Billing": "var(--color-sky)",
+  "HR & Workforce": "var(--color-primary)",
+  "Records & Workflow": "var(--color-slate)",
+  "Analytics & Reporting": "var(--color-tech-blue)",
+  "Customer Portals": "var(--color-sky)",
+  "E-commerce": "var(--color-primary)",
+  "Field Operations": "var(--color-tech-blue)",
+  "Program Monitoring": "var(--color-sky)",
+  Integrations: "var(--color-slate)",
+};
+
 export const industries: Industry[] = [
   "SMEs",
   "Corporate",

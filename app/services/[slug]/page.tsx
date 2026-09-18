@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CheckCircle2, Users2 } from "lucide-react";
+import { XCircle, Users2 } from "lucide-react";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, faqJsonLd, serviceJsonLd } from "@/lib/structured-data";
-import { Breadcrumbs, Button, Eyebrow, SectionHeading } from "@/components/ui/primitives";
+import { Breadcrumbs, Button, SectionHeading } from "@/components/ui/primitives";
 import { FaqAccordion } from "@/components/ui/faq-accordion";
-import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/reveal";
+import { Reveal } from "@/components/motion/reveal";
+import { SplitHeading } from "@/components/motion/split-heading";
 import { ServiceCard } from "@/components/cards";
+import { ServiceDiagram } from "@/components/story/service-diagram";
+import { CapabilityModules } from "@/components/story/capability-modules";
+import { ScenarioStory } from "@/components/story/scenario-story";
+import { TechProcessStrip } from "@/components/story/tech-process-strip";
+import { ProofStrip } from "@/components/story/proof-strip";
 import { getServiceBySlug, services } from "@/content/services";
+import { getServiceVisual } from "@/content/service-visuals";
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
@@ -30,14 +37,12 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const service = getServiceBySlug(slug);
   if (!service) notFound();
 
+  const { accent, visual } = getServiceVisual(service.slug);
   const related = services.filter((item) => item.slug !== service.slug).slice(0, 3);
 
   return (
     <div className="pb-24 pt-40">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd(service)) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd(service)) }} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -54,25 +59,39 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(service.faqs)) }} />
       )}
 
-      <div className="container-page">
-        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Services", href: "/services" }, { label: service.title }]} />
-        <Eyebrow>Service</Eyebrow>
-        <h1 className="mt-4 max-w-3xl text-[clamp(2.25rem,5vw,4rem)] leading-[1.03] tracking-tight">
-          {service.heroStatement}
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[var(--ink-muted)]">{service.overview}</p>
-        <div className="mt-9">
-          <Button href="/book">Book a Consultation</Button>
+      {/* Hero — the diagram carries the concept, not a paragraph */}
+      <div className="container-page grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+        <div>
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Services", href: "/services" }, { label: service.title }]} />
+          <p className="text-xs font-bold uppercase tracking-[0.16em]" style={{ color: accent }}>
+            Service
+          </p>
+          <SplitHeading
+            as="h1"
+            text={service.heroStatement}
+            className="mt-4 block max-w-xl text-[clamp(2rem,4.4vw,3.5rem)] leading-[1.05] tracking-tight"
+          />
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-[var(--ink-muted)]">{service.overview}</p>
+          <div className="mt-9 flex flex-wrap gap-4">
+            <Button href="/book">Book a Consultation</Button>
+            <Button href="#how-it-works" variant="secondary" icon={false}>
+              See how it works
+            </Button>
+          </div>
+        </div>
+        <div className="rounded-[2rem] border border-[var(--line)] bg-[var(--surface)] p-8 shadow-[var(--shadow-elevated)]">
+          <ServiceDiagram visual={visual} accent={accent} />
         </div>
       </div>
 
+      {/* The problem, briefly */}
       <div className="container-page mt-20 grid gap-6 lg:grid-cols-2">
         <Reveal className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-8">
-          <h2 className="text-xl font-bold tracking-tight">Problems this service solves</h2>
+          <h2 className="text-xl font-bold tracking-tight">What&rsquo;s not working today</h2>
           <ul className="mt-5 grid gap-3">
             {service.problems.map((problem) => (
               <li key={problem} className="flex items-start gap-3 text-sm text-[var(--ink-muted)]">
-                <CheckCircle2 size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--cta)]" />
+                <XCircle size={17} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--ink-muted)]" />
                 {problem}
               </li>
             ))}
@@ -80,7 +99,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         </Reveal>
         <Reveal delay={0.08} className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-8">
           <h2 className="flex items-center gap-2.5 text-xl font-bold tracking-tight">
-            <Users2 size={20} aria-hidden="true" className="text-[var(--cta)]" />
+            <Users2 size={20} aria-hidden="true" style={{ color: accent }} />
             Who it&rsquo;s for
           </h2>
           <ul className="mt-5 grid gap-3">
@@ -93,58 +112,53 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         </Reveal>
       </div>
 
-      <section className="mt-16">
+      {/* How MartEX delivers this */}
+      <section id="how-it-works" className="mt-16 scroll-mt-28">
         <div className="container-page">
-          <SectionHeading eyebrow="Capabilities" title="Typical capabilities" />
-          <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {service.capabilities.map((capability) => (
-              <StaggerItem key={capability}>
-                <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5 text-sm font-medium text-[var(--ink)]">
-                  {capability}
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
+          <SectionHeading
+            eyebrow="How it works"
+            title="From this problem to a working system."
+            description="The same delivery approach behind every engagement, applied to this service."
+          />
+          <TechProcessStrip steps={service.approach} accent={accent} />
         </div>
       </section>
 
+      {/* Capabilities as connected modules */}
       <section className="mt-16">
-        <div className="container-page grid gap-12 lg:grid-cols-2">
-          <div>
-            <SectionHeading eyebrow="Example use cases" title="Where this shows up" align="split" />
-            <ul className="grid gap-3">
-              {service.useCases.map((useCase) => (
-                <li key={useCase} className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4 text-sm text-[var(--ink-muted)]">
-                  {useCase}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <SectionHeading eyebrow="Delivery approach" title="How MartEX delivers this" align="split" />
-            <ol className="grid gap-3">
-              {service.approach.map((step, index) => (
-                <li key={step} className="flex gap-3 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4 text-sm text-[var(--ink-muted)]">
-                  <span className="font-mono text-[var(--cta)]">0{index + 1}</span>
-                  {step}
-                </li>
-              ))}
-            </ol>
+        <div className="container-page">
+          <SectionHeading eyebrow="Capabilities" title="What this service includes" />
+          <CapabilityModules capabilities={service.capabilities} accent={accent} />
+          <div className="mt-8 flex flex-wrap gap-2">
+            {service.useCases.map((useCase) => (
+              <span
+                key={useCase}
+                className="rounded-full border border-[var(--line)] bg-[var(--surface)] px-3.5 py-1.5 text-xs font-medium text-[var(--ink-muted)]"
+              >
+                {useCase}
+              </span>
+            ))}
           </div>
         </div>
       </section>
 
+      {/* Real-world scenario */}
       <section className="mt-16">
         <div className="container-page">
-          <SectionHeading eyebrow="What you receive" title="Expected deliverables" />
-          <div className="grid gap-4 sm:grid-cols-2">
-            {service.deliverables.map((deliverable) => (
-              <div key={deliverable} className="flex items-start gap-3 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5">
-                <CheckCircle2 size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--cta)]" />
-                <p className="text-sm text-[var(--ink-muted)]">{deliverable}</p>
-              </div>
-            ))}
-          </div>
+          <SectionHeading eyebrow="In practice" title="What this looks like for a real organization" />
+          <ScenarioStory scenario={service.scenario} accent={accent} />
+        </div>
+      </section>
+
+      {/* Proof, honestly */}
+      <section className="mt-16">
+        <div className="container-page">
+          <SectionHeading
+            eyebrow="What you receive"
+            title="Proof, not promises."
+            description="No invented statistics — here's what a client walks away with, and any verified work already linked to this service."
+          />
+          <ProofStrip serviceSlug={service.slug} deliverables={service.deliverables} accent={accent} />
         </div>
       </section>
 
