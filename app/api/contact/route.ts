@@ -1,1 +1,56 @@
-import{NextResponse}from"next/server";import{z}from"zod";const schema=z.object({name:z.string().min(2),email:z.string().email(),organization:z.string().optional(),message:z.string().min(10),website:z.string().max(0)});export async function POST(req:Request){const parsed=schema.safeParse(await req.json());if(!parsed.success)return NextResponse.json({message:"Please provide a valid name, email, and message."},{status:400});if(!process.env.CONTACT_WEBHOOK_URL)return NextResponse.json({message:"This message was validated but not sent because contact delivery is not configured. MartEX must connect CONTACT_WEBHOOK_URL before launch."},{status:503});const r=await fetch(process.env.CONTACT_WEBHOOK_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(parsed.data)});return r.ok?NextResponse.json({message:"Message received. MartEX will respond through the contact details provided."}):NextResponse.json({message:"Message delivery is temporarily unavailable."},{status:502})}
+import { NextResponse } from "next/server";
+import { contactFormSchema } from "@/lib/validations";
+
+export const runtime = "nodejs";
+
+export async function POST(request: Request) {
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ message: "Could not read the submitted form data." }, { status: 400 });
+  }
+
+  const parsed = contactFormSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { message: "Some required fields are missing or invalid.", issues: parsed.error.flatten() },
+      { status: 422 }
+    );
+  }
+
+  if (parsed.data.website && parsed.data.website.length > 0) {
+    // Honeypot tripped — respond as if successful without processing further.
+    return NextResponse.json({ ok: true }, { status: 200 });
+  }
+
+  const webhookUrl = process.env.CONTACT_WEBHOOK_URL;
+  if (!webhookUrl) {
+    return NextResponse.json(
+      {
+        message:
+          "Contact submissions aren't connected to a delivery provider yet, so nothing was sent. Set CONTACT_WEBHOOK_URL to enable this form — see README.md.",
+      },
+      { status: 503 }
+    );
+  }
+
+  try {
+    const webhookResponse = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(process.env.CONTACT_WEBHOOK_TOKEN ? { Authorization: `Bearer ${process.env.CONTACT_WEBHOOK_TOKEN}` } : {}),
+      },
+      body: JSON.stringify(parsed.data),
+    });
+
+    if (!webhookResponse.ok) {
+      return NextResponse.json({ message: "The message could not be delivered. Please try again shortly." }, { status: 502 });
+    }
+  } catch {
+    return NextResponse.json({ message: "The message could not be delivered. Please try again shortly." }, { status: 502 });
+  }
+
+  return NextResponse.json({ ok: true }, { status: 200 });
+}

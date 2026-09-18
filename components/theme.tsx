@@ -1,4 +1,0 @@
-"use client";
-import { useEffect,useState } from "react"; import { Monitor, Moon, Sun } from "lucide-react";
-type Theme="light"|"dark"|"system";
-export function ThemeSelector(){const [theme,setTheme]=useState<Theme>("system");useEffect(()=>{const saved=(localStorage.getItem("martex-theme") as Theme)||"system";setTheme(saved);apply(saved);},[]);function apply(t:Theme){const dark=t==="dark"||(t==="system"&&matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.dataset.theme=dark?"dark":"light"}function cycle(){const next:Theme=theme==="system"?"light":theme==="light"?"dark":"system";setTheme(next);localStorage.setItem("martex-theme",next);apply(next)}const Icon=theme==="light"?Sun:theme==="dark"?Moon:Monitor;return <button className="iconbtn" onClick={cycle} aria-label={`Theme: ${theme}. Change theme`} title={`Theme: ${theme}`}><Icon size={18}/></button>}

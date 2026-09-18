@@ -1,4 +1,38 @@
 import type { Metadata } from "next";
-import { company } from "@/content/site";
-export function metadata(title:string, description:string):Metadata { return {title:title===company.name?title:`${title} | ${company.name}`,description,openGraph:{title,description,type:"website",siteName:company.name},twitter:{card:"summary_large_image",title,description}}; }
-export function organizationJsonLd(){return {"@context":"https://schema.org","@type":"Organization",name:company.name,description:company.description,foundingDate:String(company.established),address:{"@type":"PostalAddress",addressLocality:"Monrovia",addressCountry:"LR"}}}
+import { company } from "@/content/company";
+import { getSiteUrl } from "./utils";
+
+export function buildMetadata({
+  title,
+  description,
+  path = "/",
+  isHome = false,
+}: {
+  title: string;
+  description: string;
+  path?: string;
+  isHome?: boolean;
+}): Metadata {
+  const siteUrl = getSiteUrl();
+  const fullTitle = isHome ? `${title} | ${company.tagline}` : `${title} | ${company.name}`;
+  const url = `${siteUrl}${path}`;
+
+  return {
+    title: fullTitle,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: fullTitle,
+      description,
+      url,
+      siteName: company.name,
+      type: "website",
+      locale: "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: fullTitle,
+      description,
+    },
+  };
+}

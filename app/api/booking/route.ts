@@ -1,1 +1,75 @@
-import{NextResponse}from"next/server";import{z}from"zod";const schema=z.object({name:z.string().min(2),email:z.string().email(),phone:z.string().min(5),organization:z.string().min(2),jobTitle:z.string().min(2),service:z.string().min(2),challenge:z.string().min(3),description:z.string().min(10),users:z.string().min(2),timeframe:z.string().min(2),budget:z.string().min(2),startingPoint:z.string().min(2),date:z.string().min(1),time:z.string().min(1),timezone:z.string().min(2),format:z.string().min(2),consent:z.literal(true),privacy:z.literal(true),website:z.string().max(0)});export async function POST(req:Request){const parsed=schema.safeParse(await req.json());if(!parsed.success)return NextResponse.json({message:"Please review the form and correct the highlighted information."},{status:400});if(!process.env.BOOKING_WEBHOOK_URL)return NextResponse.json({message:"Your request was validated, but booking delivery is not configured yet. Please do not consider it submitted. MartEX must connect BOOKING_WEBHOOK_URL before launch."},{status:503});const ref=`MX-${Date.now().toString(36).toUpperCase()}`;const res=await fetch(process.env.BOOKING_WEBHOOK_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...parsed.data,reference:ref})});if(!res.ok)return NextResponse.json({message:"The delivery service could not accept this request. Please try again later."},{status:502});return NextResponse.json({message:`Your reference is ${ref}. A confirmation email integration can be triggered by the booking adapter.`})}
+import { NextResponse } from "next/server";
+import { bookingSubmissionSchema } from "@/lib/validations";
+
+export const runtime = "nodejs";
+
+function generateReference() {
+  return `MX-${Date.now().toString(36).toUpperCase()}`;
+}
+
+export async function POST(request: Request) {
+  let formData: FormData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return NextResponse.json({ message: "Could not read the submitted form data." }, { status: 400 });
+  }
+
+  const website = formData.get("website");
+  if (typeof website === "string" && website.length > 0) {
+    // Honeypot tripped — respond as if successful without processing further.
+    return NextResponse.json({ reference: generateReference() }, { status: 200 });
+  }
+
+  const values = Object.fromEntries(
+    Array.from(formData.entries()).filter(([key]) => key !== "requirementsDocument")
+  );
+
+  const parsed = bookingSubmissionSchema.safeParse(values);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { message: "Some required fields are missing or invalid.", issues: parsed.error.flatten() },
+      { status: 422 }
+    );
+  }
+
+  const webhookUrl = process.env.BOOKING_WEBHOOK_URL;
+  if (!webhookUrl) {
+    return NextResponse.json(
+      {
+        message:
+          "Booking submissions aren't connected to a delivery provider yet, so nothing was sent. Set BOOKING_WEBHOOK_URL to enable this form — see README.md.",
+      },
+      { status: 503 }
+    );
+  }
+
+  const reference = generateReference();
+  formData.set("reference", reference);
+
+  try {
+    const webhookResponse = await fetch(webhookUrl, {
+      method: "POST",
+      // Forwarding the parsed FormData directly (including the file, if any)
+      // preserves multipart/form-data with its boundary automatically.
+      body: formData,
+      headers: process.env.BOOKING_WEBHOOK_TOKEN
+        ? { Authorization: `Bearer ${process.env.BOOKING_WEBHOOK_TOKEN}` }
+        : undefined,
+    });
+
+    if (!webhookResponse.ok) {
+      return NextResponse.json(
+        { message: "The consultation request could not be delivered. Please try again shortly." },
+        { status: 502 }
+      );
+    }
+  } catch {
+    return NextResponse.json(
+      { message: "The consultation request could not be delivered. Please try again shortly." },
+      { status: 502 }
+    );
+  }
+
+  return NextResponse.json({ reference }, { status: 200 });
+}
