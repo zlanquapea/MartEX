@@ -41,6 +41,14 @@ npm run typecheck  # tsc --noEmit
 Before considering a change complete, run `npm run lint`, `npm run typecheck`, and
 `npm run build` — all three must pass cleanly.
 
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every pull request into `main` and on every push to
+`main`: install with `npm ci`, then `npm run lint`, `npm run typecheck`, and `npm run build`
+(with a placeholder `NEXT_PUBLIC_SITE_URL` so the build has a valid canonical URL to render
+metadata against). Configure this workflow as a required status check in the repository's
+branch protection settings once the team is ready to enforce it on `main`.
+
 ## Project structure
 
 ```
@@ -172,16 +180,25 @@ Tailwind's `@theme` mapping — there is no per-component light/dark branching.
 Open Graph, Twitter card). `lib/structured-data.ts` builds JSON-LD for Organization,
 Service, SoftwareApplication (solutions), FAQPage, and BreadcrumbList, injected per route.
 `app/sitemap.ts` and `app/robots.ts` are generated from the same content arrays used to render
-the pages, so they never drift out of sync. `app/icon.tsx` / `app/apple-icon.tsx` generate a
-placeholder favicon from the brand palette — see the logo note below.
+the pages, so they never drift out of sync. `app/icon.png`, `app/apple-icon.png`, and
+`app/opengraph-image.png` are static files derived from the approved logo — see the logo note
+below — and are picked up automatically by Next's file conventions (no manual `<head>` wiring
+needed).
 
 ## Brand logo
 
-No approved MartEX logo file was supplied for this build. `components/logo.tsx` renders a
-simple placeholder wordmark/icon using the confirmed brand palette, documented inline as a
-placeholder. Once MartEX provides the approved logo (SVG preferred, with light/dark variants
-if the mark needs different treatment per theme), replace the contents of `Logo` (or point it
-at a static asset via `next/image`) — do not stretch, recolor, or crop the approved file.
+The approved MartEX logo is at `public/brand/martex-logo-mark.png` — trimmed to the wordmark
+(tagline cropped off, since the tagline is rendered separately in copy) with its white
+background made transparent; the mark itself is otherwise untouched (no stretching,
+distortion, or recoloring). `app/icon.png`, `app/apple-icon.png`, and
+`app/opengraph-image.png` are derived from the same source file (the favicon uses the "X"
+glyph on the brand navy; the OG image places the full mark on a light card).
+
+Because the mark's "Mart" glyphs are dark navy, `components/logo.tsx` renders it on a small,
+fixed off-white chip (`var(--color-off-white)`, not the theme-flipping `--surface` variable)
+so it stays legible in dark mode. In light mode the chip is the same color as the page
+background, so it's invisible. If MartEX later supplies a true light/reversed variant for
+dark surfaces, swap that in and drop the chip.
 
 ## Deployment
 

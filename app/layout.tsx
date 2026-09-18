@@ -21,10 +21,6 @@ export const metadata: Metadata = {
     template: `%s | ${company.name}`,
   },
   description: company.shortDescription,
-  icons: {
-    icon: "/icon",
-    apple: "/apple-icon",
-  },
 };
 
 export const viewport: Viewport = {

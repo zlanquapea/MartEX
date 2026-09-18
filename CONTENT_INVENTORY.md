@@ -6,12 +6,19 @@ placeholders are used instead, clearly marked, wherever a value is missing.
 
 ## Brand assets
 
-- [ ] Approved MartEX logo file (SVG preferred; raster fallback with @1x/@2x/@3x if SVG isn't
-      available), including any light/dark variants needed for legibility on both themes.
-      Currently: `components/logo.tsx` renders a placeholder wordmark using the confirmed
-      brand palette (`#0D172D`, `#336AB4`, `#4D9AD1`, `#5EA1DF`).
-- [ ] Favicon / web-app icons derived from the approved logo (currently auto-generated
-      placeholders in `app/icon.tsx` / `app/apple-icon.tsx`).
+- [x] Approved MartEX logo received and integrated (`public/brand/martex-logo-mark.png`,
+      trimmed from the supplied file, background made transparent, otherwise unmodified —
+      `components/logo.tsx`). Because the mark's "Mart" glyphs are dark navy, it renders on a
+      fixed, theme-independent off-white chip so it stays legible in dark mode without
+      recoloring the approved asset; in light mode the chip is visually identical to the page
+      background. If MartEX later supplies a true reversed/light variant for dark
+      surfaces, that can replace the chip approach.
+  - [ ] A vector (SVG) source file, if MartEX has one, would allow crisper scaling than the
+        current raster crop — not required, but nice to have.
+- [x] Favicon / web-app icons derived from the approved logo's "X" mark (`app/icon.png`,
+      `app/apple-icon.png`), composited on the brand navy per the original brief's
+      "derived from the approved logo" instruction.
+- [x] Open Graph / social share image generated from the approved logo (`app/opengraph-image.png`).
 
 ## Contact information (`content/company.ts` → `contact`)
 
