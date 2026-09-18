@@ -160,6 +160,46 @@ Light, dark, and system themes are supported with no flash of incorrect theme:
 `app/globals.css` (`:root` for light, `[data-theme="dark"]` for dark) and consumed through
 Tailwind's `@theme` mapping — there is no per-component light/dark branching.
 
+## Motion language: "Signal → System"
+
+The whole site's motion follows one idea — the same "scattered inputs resolve into one
+connected system" concept behind the hero diagram — rather than each section doing its own
+thing:
+
+- **Resolve, don't fade** (`components/motion/reveal.tsx`): headline-weight content enters
+  with a soft blur/scale/drift and snaps into focus (`variant="resolve"`); dense card grids
+  use a cheaper plain fade-up (`variant="rise"`) so busy sections stay calm.
+- **A signal rail**: `components/motion/scroll-progress.tsx` draws a slim gradient bar under
+  the header and a fixed side rail on the home page (`home-signal-rail.tsx`) that lights up
+  per section via `use-active-section.ts` — the connective thread tying otherwise-stacked
+  sections into one journey.
+- **Split headlines**: `components/motion/split-heading.tsx` powers every `SectionHeading`
+  and the hero/CTA titles — each word sits in a masked box and slides into place. The real
+  text is always present for screen readers/SEO (`sr-only` span); the per-word animation runs
+  over an `aria-hidden` duplicate.
+- **Every CTA is magnetic**: `Button` (`components/ui/primitives.tsx`) bakes in
+  `MagneticButton`'s cursor-follow pull and a `btn-shimmer` hover sweep (see
+  `app/globals.css`), so this is automatic everywhere, not something to remember per page.
+  `SubmitButton` gets the shimmer but not the magnetic pull — a form's submit action
+  shouldn't dodge the cursor.
+- **Cards react**: `TiltCard` gives every card a cursor-follow 3D tilt + lift (replacing a
+  plain CSS hover transform, since the two would otherwise fight over the `transform`
+  property), and a `SignalTrace` accent line draws in on hover/focus.
+- **Scenes, not stacked divs**: `components/motion/scene.tsx` wraps each home-page section in
+  a one-shot clip-path wipe as it scrolls into view.
+- **Case studies morph into their detail page** via the native View Transitions API
+  (`components/motion/view-transition-link.tsx` + `lib/view-transitions.ts`), progressive
+  enhancement with an instant-navigation fallback everywhere it isn't supported.
+- **Route changes cross-fade** (`components/motion/route-transition.tsx`) instead of hard
+  cutting, skipped entirely on the very first page load.
+- **Lenis** (`components/motion/smooth-scroll.tsx`) adds inertia scrolling, wired into GSAP's
+  ticker so the process narrative's `ScrollTrigger` sequence stays in sync with the smoothed
+  position — skipped on touch (native momentum already feels right there) and reduced motion.
+
+Deliberately **not** used, to stay inside MartEX's trust-first brand rather than a generic
+"experimental agency" look: WebGL/shaders/3D scenes, particle systems, glitch/scramble text,
+a custom cursor, sound, and grid-breaking layout moments.
+
 ## Accessibility & motion
 
 - Skip-to-content link, semantic landmarks, labelled form fields, visible focus states,
@@ -172,7 +212,8 @@ Tailwind's `@theme` mapping — there is no per-component light/dark branching.
   disabling the hero animation loop, magnetic pointer effects, and scroll-linked GSAP sequence
   for users who need it. The hero visualization and process narrative each render a genuinely
   static alternative, not just a frozen mid-animation frame.
-- Pointer-only effects (magnetic buttons, hero parallax) are disabled on touch devices
+- Pointer-only effects (magnetic buttons, hero parallax, card tilt) are disabled on touch
+  devices
 
 ## SEO
 

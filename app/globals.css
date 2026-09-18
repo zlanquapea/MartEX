@@ -177,6 +177,29 @@
     display: grid;
     gap: 0.5rem;
   }
+
+  /* Signature CTA micro-interaction: a diagonal light sweep on hover.
+     Purely a hover response (not an ambient animation), but its transition
+     still collapses to near-zero under the reduced-motion rule below. */
+  .btn-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.4) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+
+  .btn-shimmer:hover::after,
+  .btn-shimmer:focus-visible::after {
+    transform: translateX(120%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -192,4 +215,21 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Shared-element navigation (see components/motion/view-transition-link.tsx):
+   a slightly slower, brand-matched ease on the default whole-page cross-fade
+   than the browser's terse default, so it reads as deliberate rather than
+   like a flicker. Named elements (case-study titles) get their own implicit
+   morph animation from the browser and aren't affected by this. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }

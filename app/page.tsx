@@ -12,6 +12,8 @@ import {
 } from "@/components/sections/home";
 import { SolutionExplorer } from "@/components/sections/solution-explorer";
 import { SectionHeading } from "@/components/ui/primitives";
+import { Scene } from "@/components/motion/scene";
+import { HomeSignalRail } from "@/components/motion/home-signal-rail";
 
 export const metadata: Metadata = buildMetadata({
   title: "MartEX",
@@ -28,19 +30,22 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
       />
+      <HomeSignalRail />
       <Hero />
       <TrustStrip />
       <ServicesGrid />
-      <section className="bg-[var(--surface)] py-16">
-        <div className="container-page">
-          <SectionHeading
-            eyebrow="Solution explorer"
-            title="Find the system behind the challenge."
-            description="Explore adaptable solution categories by business challenge or industry. Final scope is always based on discovery and agreed requirements."
-          />
-          <SolutionExplorer />
-        </div>
-      </section>
+      <Scene>
+        <section id="solutions" className="bg-[var(--surface)] py-16">
+          <div className="container-page">
+            <SectionHeading
+              eyebrow="Solution explorer"
+              title="Find the system behind the challenge."
+              description="Explore adaptable solution categories by business challenge or industry. Final scope is always based on discovery and agreed requirements."
+            />
+            <SolutionExplorer />
+          </div>
+        </section>
+      </Scene>
       <ValueProps />
       <ProcessSection />
       <FeaturedWork />

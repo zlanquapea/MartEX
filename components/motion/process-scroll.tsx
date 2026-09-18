@@ -13,6 +13,7 @@ import { Reveal } from "./reveal";
 export function ProcessScrollNarrative() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const connectorRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -33,6 +34,20 @@ export function ProcessScrollNarrative() {
 
         gsap.set(panels, { opacity: 0.25, y: 16 });
         gsap.set(panels[0], { opacity: 1, y: 0 });
+
+        if (connectorRef.current) {
+          gsap.set(connectorRef.current, { scaleY: 0 });
+          gsap.to(connectorRef.current, {
+            scaleY: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: wrapperRef.current,
+              start: "top center",
+              end: "bottom center",
+              scrub: true,
+            },
+          });
+        }
 
         panels.forEach((panel, index) => {
           ScrollTrigger.create({
@@ -89,7 +104,12 @@ export function ProcessScrollNarrative() {
             ))}
           </ol>
         </div>
-        <div className="grid gap-32 py-8">
+        <div className="relative grid gap-32 py-8">
+          <div
+            aria-hidden="true"
+            className="absolute -left-8 top-0 h-full w-px origin-top bg-gradient-to-b from-[var(--color-tech-blue)] to-[var(--color-sky)]"
+            ref={connectorRef}
+          />
           {processStages.map((stage, index) => (
             <div
               key={stage.stage}

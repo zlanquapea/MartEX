@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { motion, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
 import { useIsReducedMotion } from "./use-reduced-motion";
 
 type Node = { id: string; x: number; y: number; label: string };
@@ -34,8 +34,17 @@ export function SystemVisualization() {
   const pointerY = useMotionValue(0);
   const springX = useSpring(pointerX, { stiffness: 60, damping: 18, mass: 0.6 });
   const springY = useSpring(pointerY, { stiffness: 60, damping: 18, mass: 0.6 });
-  const rotateX = useTransform(springY, [-40, 40], [4, -4]);
-  const rotateY = useTransform(springX, [-40, 40], [-4, 4]);
+  const pointerRotateX = useTransform(springY, [-40, 40], [4, -4]);
+  const pointerRotateY = useTransform(springX, [-40, 40], [-4, 4]);
+
+  // A small additional drift tied to scroll position, so the diagram keeps
+  // reacting once the visitor starts moving through the page instead of
+  // sitting frozen the moment the entrance sequence finishes.
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start 0.85", "start 0.1"] });
+  const scrollDrift = useTransform(scrollYProgress, [0, 1], [0, -28]);
+  const scrollRotate = useTransform(scrollYProgress, [0, 1], [0, 5]);
+  const rotateX = useTransform([pointerRotateX, scrollRotate], ([pointer, scroll]) => Number(pointer) - Number(scroll) * 0.4);
+  const rotateY = useTransform([pointerRotateY, scrollRotate], ([pointer, scroll]) => Number(pointer) + Number(scroll));
 
   function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
     if (shouldReduceMotion || isTouch || !containerRef.current) return;
@@ -72,7 +81,7 @@ export function SystemVisualization() {
       <motion.svg
         viewBox="0 0 400 380"
         className="relative h-full w-full"
-        style={animate ? { rotateX, rotateY, transformPerspective: 800 } : undefined}
+        style={animate ? { rotateX, rotateY, y: scrollDrift, transformPerspective: 800 } : undefined}
         aria-hidden="true"
       >
         {nodes.map((node, index) =>

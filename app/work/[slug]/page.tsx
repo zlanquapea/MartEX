@@ -6,6 +6,7 @@ import { Breadcrumbs, Button, Eyebrow, SectionHeading, Tag } from "@/components/
 import { Reveal } from "@/components/motion/reveal";
 import { getCaseStudyBySlug, caseStudies } from "@/content/case-studies";
 import { getServiceBySlug } from "@/content/services";
+import { caseStudyTitleTransitionName } from "@/lib/view-transitions";
 
 export function generateStaticParams() {
   return caseStudies.map((study) => ({ slug: study.slug }));
@@ -61,7 +62,12 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
           <span className="text-sm font-medium text-[var(--ink-muted)]">{study.industry}</span>
         </div>
         <Eyebrow>Case study</Eyebrow>
-        <h1 className="mt-2 text-[clamp(2rem,4.6vw,3.5rem)] leading-[1.05] tracking-tight">{study.title}</h1>
+        <h1
+          className="mt-2 text-[clamp(2rem,4.6vw,3.5rem)] leading-[1.05] tracking-tight"
+          style={{ viewTransitionName: caseStudyTitleTransitionName(study.slug) } as React.CSSProperties}
+        >
+          {study.title}
+        </h1>
         <p className="mt-6 text-lg leading-relaxed text-[var(--ink-muted)]">{study.summary}</p>
       </div>
 

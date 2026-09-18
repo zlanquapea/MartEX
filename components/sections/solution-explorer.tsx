@@ -1,15 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { solutions, solutionCategories, industries } from "@/content/solutions";
 import { SolutionCard } from "@/components/cards";
+import { useIsReducedMotion } from "@/components/motion/use-reduced-motion";
 
 type FilterMode = "category" | "industry";
 
 export function SolutionExplorer() {
   const [mode, setMode] = useState<FilterMode>("category");
   const [active, setActive] = useState<string>("All");
+  const shouldReduceMotion = useIsReducedMotion();
 
   const options = mode === "category" ? ["All", ...solutionCategories] : ["All", ...industries];
 
@@ -62,12 +64,21 @@ export function SolutionExplorer() {
         ))}
       </div>
 
-      <motion.div layout className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((solution) => (
-          <motion.div key={solution.slug} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <SolutionCard solution={solution} />
-          </motion.div>
-        ))}
+      <motion.div layout={!shouldReduceMotion} className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <AnimatePresence mode="popLayout">
+          {filtered.map((solution) => (
+            <motion.div
+              key={solution.slug}
+              layout={!shouldReduceMotion}
+              initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.94 }}
+              transition={{ duration: shouldReduceMotion ? 0.01 : 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <SolutionCard solution={solution} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </motion.div>
 
       {filtered.length === 0 && (
