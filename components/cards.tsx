@@ -17,6 +17,8 @@ import type { CaseStudy } from "@/content/case-studies";
 import { Tag } from "@/components/ui/primitives";
 import { TiltCard } from "@/components/motion/tilt-card";
 import { caseStudyTitleTransitionName } from "@/lib/view-transitions";
+import { getServiceVisual } from "@/content/service-visuals";
+import { categoryAccents } from "@/content/solutions";
 
 const serviceIcons: Record<string, LucideIcon> = {
   "custom-software-development": Cog,
@@ -41,6 +43,7 @@ function SignalTrace() {
 
 export function ServiceCard({ service, index }: { service: Service; index: number }) {
   const Icon = serviceIcons[service.slug] ?? Cog;
+  const { accent } = getServiceVisual(service.slug);
   return (
     <TiltCard>
       <Link
@@ -50,7 +53,10 @@ export function ServiceCard({ service, index }: { service: Service; index: numbe
         <SignalTrace />
         <div>
           <div className="flex items-start justify-between">
-            <span className="grid size-12 place-items-center rounded-2xl bg-[var(--color-sky)]/12 text-[var(--cta)] transition-colors group-hover:bg-[var(--cta)] group-hover:text-[var(--cta-ink)]">
+            <span
+              className="grid size-12 place-items-center rounded-2xl bg-[color-mix(in_srgb,var(--accent)_14%,transparent)] text-[var(--accent)] transition-colors group-hover:bg-[var(--accent)] group-hover:text-[var(--cta-ink)] group-focus-visible:bg-[var(--accent)] group-focus-visible:text-[var(--cta-ink)]"
+              style={{ "--accent": accent } as React.CSSProperties}
+            >
               <Icon size={22} aria-hidden="true" />
             </span>
             <span className="font-mono text-xs text-[var(--ink-muted)]">0{index + 1}</span>
@@ -72,6 +78,7 @@ export function ServiceCard({ service, index }: { service: Service; index: numbe
 }
 
 export function SolutionCard({ solution }: { solution: Solution }) {
+  const accent = categoryAccents[solution.category] ?? "var(--color-tech-blue)";
   return (
     <TiltCard>
       <Link
@@ -80,7 +87,9 @@ export function SolutionCard({ solution }: { solution: Solution }) {
       >
         <SignalTrace />
         <div>
-          <Tag>{solution.category}</Tag>
+          <Tag style={{ backgroundColor: `color-mix(in srgb, ${accent} 14%, transparent)`, color: accent }}>
+            {solution.category}
+          </Tag>
           <h3 className="mt-4 text-lg font-bold tracking-tight">{solution.name}</h3>
           <p className="mt-2 text-sm leading-relaxed text-[var(--ink-muted)]">{solution.valueProposition}</p>
         </div>

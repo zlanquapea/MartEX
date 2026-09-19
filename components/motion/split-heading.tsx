@@ -42,10 +42,15 @@ export function SplitHeading({
           <span key={`${word}-${index}`} className="inline-block overflow-hidden pb-[0.08em]">
             <motion.span
               className={cn("inline-block will-change-transform", wordClassName)}
-              initial={shouldReduceMotion ? undefined : { y: "115%" }}
+              initial={{ y: "115%" }}
               whileInView={shouldReduceMotion ? undefined : { y: "0%" }}
+              animate={shouldReduceMotion ? { y: "0%" } : undefined}
               viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.75, delay: delayStart + index * stagger, ease: [0.16, 1, 0.3, 1] }}
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0 }
+                  : { duration: 0.75, delay: delayStart + index * stagger, ease: [0.16, 1, 0.3, 1] }
+              }
             >
               {word}
               {index < words.length - 1 ? " " : ""}

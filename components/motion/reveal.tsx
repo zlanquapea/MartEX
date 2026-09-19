@@ -43,10 +43,15 @@ export function Reveal({
   return (
     <Component
       className={className}
-      initial={shouldReduceMotion ? undefined : hidden}
+      initial={hidden}
       whileInView={shouldReduceMotion ? undefined : shown}
+      animate={shouldReduceMotion ? shown : undefined}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: variant === "resolve" ? 0.7 : 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={
+        shouldReduceMotion
+          ? { duration: 0 }
+          : { duration: variant === "resolve" ? 0.7 : 0.6, delay, ease: [0.16, 1, 0.3, 1] }
+      }
     >
       {children}
     </Component>
@@ -102,8 +107,8 @@ export function StaggerItem({
       : { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } };
 
   const item: Variants = {
-    hidden: shouldReduceMotion ? {} : hidden,
-    show: shouldReduceMotion ? {} : shown,
+    hidden: shouldReduceMotion ? shown : hidden,
+    show: shown,
   };
 
   return (

@@ -17,10 +17,11 @@ export function Scene({ children, className }: { children: ReactNode; className?
   return (
     <motion.div
       className={className}
-      initial={shouldReduceMotion ? undefined : { clipPath: "inset(6% 0% 0% 0%)", opacity: 0, y: 32 }}
+      initial={{ clipPath: "inset(6% 0% 0% 0%)", opacity: 0, y: 32 }}
       whileInView={shouldReduceMotion ? undefined : { clipPath: "inset(0% 0% 0% 0%)", opacity: 1, y: 0 }}
+      animate={shouldReduceMotion ? { clipPath: "inset(0% 0% 0% 0%)", opacity: 1, y: 0 } : undefined}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
     </motion.div>

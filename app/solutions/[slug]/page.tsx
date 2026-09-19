@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CheckCircle2, ImageOff, Plug, ShieldCheck } from "lucide-react";
+import { Plug, ShieldCheck } from "lucide-react";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, faqJsonLd, solutionJsonLd } from "@/lib/structured-data";
 import { Breadcrumbs, Button, Eyebrow, SectionHeading, Tag } from "@/components/ui/primitives";
 import { FaqAccordion } from "@/components/ui/faq-accordion";
-import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/reveal";
+import { Reveal } from "@/components/motion/reveal";
 import { SolutionCard } from "@/components/cards";
-import { getSolutionBySlug, solutions } from "@/content/solutions";
+import { SolutionPreview } from "@/components/story/solution-preview";
+import { CapabilityModules } from "@/components/story/capability-modules";
+import { TechProcessStrip } from "@/components/story/tech-process-strip";
+import { getSolutionBySlug, solutions, categoryAccents } from "@/content/solutions";
 
 export function generateStaticParams() {
   return solutions.map((solution) => ({ slug: solution.slug }));
@@ -30,6 +33,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
   const solution = getSolutionBySlug(slug);
   if (!solution) notFound();
 
+  const accent = categoryAccents[solution.category] ?? "var(--color-tech-blue)";
   const related = solutions.filter((item) => item.slug !== solution.slug && item.category === solution.category).slice(0, 3);
   const fallbackRelated = related.length > 0 ? related : solutions.filter((item) => item.slug !== solution.slug).slice(0, 3);
 
@@ -55,7 +59,9 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
       <div className="container-page grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
           <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Solutions", href: "/solutions" }, { label: solution.name }]} />
-          <Tag>Concept solution · {solution.category}</Tag>
+          <Tag style={{ backgroundColor: `color-mix(in srgb, ${accent} 14%, transparent)`, color: accent }}>
+            Concept solution · {solution.category}
+          </Tag>
           <h1 className="mt-4 max-w-xl text-[clamp(2.25rem,4.6vw,3.75rem)] leading-[1.03] tracking-tight">
             {solution.valueProposition}
           </h1>
@@ -70,11 +76,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
             </Button>
           </div>
         </div>
-        <div className="flex aspect-[4/3] flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-[var(--line)] bg-[var(--surface)] p-8 text-center">
-          <ImageOff size={28} aria-hidden="true" className="text-[var(--ink-muted)]" />
-          <p className="text-sm font-semibold text-[var(--ink-muted)]">Interface preview coming soon</p>
-          <p className="text-xs text-[var(--ink-muted)]">Screenshots are added once a real interface is built for a client engagement.</p>
-        </div>
+        <SolutionPreview category={solution.category} features={solution.coreFeatures} accent={accent} />
       </div>
 
       <div className="container-page mt-20 grid gap-6 lg:grid-cols-2">
@@ -104,16 +106,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
       <section className="mt-16">
         <div className="container-page">
           <SectionHeading eyebrow="Core features" title="What it includes" />
-          <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {solution.coreFeatures.map((feature) => (
-              <StaggerItem key={feature}>
-                <div className="flex items-start gap-3 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5 text-sm text-[var(--ink)]">
-                  <CheckCircle2 size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--cta)]" />
-                  {feature}
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
+          <CapabilityModules capabilities={solution.coreFeatures} accent={accent} />
         </div>
       </section>
 
@@ -131,14 +124,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
           </div>
           <div>
             <SectionHeading eyebrow="Workflow" title="How it works" align="split" />
-            <ol className="grid gap-3">
-              {solution.workflow.map((step, index) => (
-                <li key={step} className="flex gap-3 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4 text-sm text-[var(--ink-muted)]">
-                  <span className="font-mono text-[var(--cta)]">0{index + 1}</span>
-                  {step}
-                </li>
-              ))}
-            </ol>
+            <TechProcessStrip steps={solution.workflow} accent={accent} />
           </div>
         </div>
       </section>
@@ -147,7 +133,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
         <div className="container-page grid gap-6 lg:grid-cols-2">
           <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-8">
             <h2 className="flex items-center gap-2.5 text-xl font-bold tracking-tight">
-              <Plug size={20} aria-hidden="true" className="text-[var(--cta)]" />
+              <Plug size={20} aria-hidden="true" style={{ color: accent }} />
               Integrations
             </h2>
             <ul className="mt-4 grid gap-2.5">
@@ -160,7 +146,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
           </div>
           <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-8">
             <h2 className="flex items-center gap-2.5 text-xl font-bold tracking-tight">
-              <ShieldCheck size={20} aria-hidden="true" className="text-[var(--cta)]" />
+              <ShieldCheck size={20} aria-hidden="true" style={{ color: accent }} />
               Security &amp; data handling
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-[var(--ink-muted)]">{solution.security}</p>

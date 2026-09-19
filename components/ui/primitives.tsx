@@ -135,9 +135,18 @@ export function SectionHeading({
   );
 }
 
-export function Tag({ children, className }: { children: ReactNode; className?: string }) {
+export function Tag({
+  children,
+  className,
+  style,
+}: {
+  children: ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   return (
     <span
+      style={style}
       className={cn(
         "inline-flex items-center rounded-lg bg-[var(--color-sky)]/12 px-2.5 py-1 text-xs font-bold text-[var(--cta)]",
         className
