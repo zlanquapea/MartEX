@@ -1,17 +1,17 @@
 "use client";
 
-import Image from "next/image";
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useIsReducedMotion } from "@/components/motion/use-reduced-motion";
 
-export type PhoneMockupScreen = { src: string; alt: string };
+export type PhoneMockupScreen = { key: string; content: ReactNode };
 
 /**
- * A device frame cycling through real captured app screens. Reduced-motion
- * visitors get the first screen as a plain static image — no timer, no
- * cross-fade — rather than a paused-but-still-mounted carousel, so there's
- * nothing here that depends on a `whileInView`/viewport trigger racing the
+ * A device frame cycling through illustrated screen mockups (not real app
+ * screenshots — see content/products.ts). Reduced-motion visitors get the
+ * first screen rendered plainly, with no timer and no cross-fade, so
+ * there's nothing here that depends on a viewport trigger racing the
  * reduced-motion preference.
  */
 export function PhoneMockup({
@@ -32,7 +32,8 @@ export function PhoneMockup({
     return () => clearInterval(id);
   }, [shouldReduceMotion, screens.length, intervalMs]);
 
-  const active = screens[shouldReduceMotion ? 0 : index];
+  const activeIndex = shouldReduceMotion ? 0 : index;
+  const active = screens[activeIndex];
 
   return (
     <div className="mx-auto w-[260px] sm:w-[290px]">
@@ -41,20 +42,20 @@ export function PhoneMockup({
           aria-hidden="true"
           className="absolute left-1/2 top-0 z-10 h-6 w-28 -translate-x-1/2 rounded-b-2xl bg-[var(--color-navy)]"
         />
-        <div className="relative h-full w-full overflow-hidden rounded-[2rem] bg-white">
+        <div className="relative h-full w-full overflow-hidden rounded-[2rem] bg-[var(--color-off-white)]">
           {shouldReduceMotion ? (
-            <Image src={active.src} alt={active.alt} fill sizes="290px" className="object-cover object-top" />
+            <div className="absolute inset-0">{active.content}</div>
           ) : (
             <AnimatePresence mode="wait">
               <motion.div
-                key={active.src}
+                key={active.key}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 className="absolute inset-0"
               >
-                <Image src={active.src} alt={active.alt} fill sizes="290px" className="object-cover object-top" />
+                {active.content}
               </motion.div>
             </AnimatePresence>
           )}
@@ -65,16 +66,16 @@ export function PhoneMockup({
         <div className="mt-5 flex justify-center gap-1.5" role="tablist" aria-label="App screens">
           {screens.map((screen, screenIndex) => (
             <button
-              key={screen.src}
+              key={screen.key}
               type="button"
               role="tab"
-              aria-selected={screenIndex === index}
+              aria-selected={screenIndex === activeIndex}
               aria-label={`Show screen ${screenIndex + 1} of ${screens.length}`}
               onClick={() => setIndex(screenIndex)}
               className="h-1.5 rounded-full transition-all duration-300"
               style={{
-                width: screenIndex === (shouldReduceMotion ? 0 : index) ? 20 : 6,
-                backgroundColor: screenIndex === (shouldReduceMotion ? 0 : index) ? accent : "var(--line)",
+                width: screenIndex === activeIndex ? 20 : 6,
+                backgroundColor: screenIndex === activeIndex ? accent : "var(--line)",
               }}
             />
           ))}
