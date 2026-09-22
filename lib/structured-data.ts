@@ -66,6 +66,29 @@ export function solutionJsonLd(solution: Solution) {
   };
 }
 
+export function productJsonLd({
+  name,
+  description,
+  url,
+  applicationCategory,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  applicationCategory: string;
+}) {
+  const siteUrl = getSiteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name,
+    description,
+    applicationCategory,
+    url,
+    creator: { "@id": `${siteUrl}/#organization` },
+  };
+}
+
 export function faqJsonLd(faqs: Faq[]) {
   return {
     "@context": "https://schema.org",

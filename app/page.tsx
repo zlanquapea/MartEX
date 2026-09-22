@@ -5,6 +5,7 @@ import {
   Hero,
   TrustStrip,
   ServicesGrid,
+  ProductsShowcase,
   ValueProps,
   ProcessSection,
   FeaturedWork,
@@ -34,6 +35,9 @@ export default function HomePage() {
       <Hero />
       <TrustStrip />
       <ServicesGrid />
+      <Scene>
+        <ProductsShowcase />
+      </Scene>
       <Scene>
         <section id="solutions" className="bg-[var(--surface)] py-16">
           <div className="container-page">

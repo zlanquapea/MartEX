@@ -112,7 +112,7 @@ export function StaggerItem({
   };
 
   return (
-    <motion.div className={className} variants={item}>
+    <motion.div className={className} variants={item} animate={shouldReduceMotion ? "show" : undefined}>
       {children}
     </motion.div>
   );

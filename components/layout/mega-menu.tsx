@@ -5,6 +5,7 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { ChevronDown } from "lucide-react";
 import { services } from "@/content/services";
 import { solutions, solutionCategories } from "@/content/solutions";
+import { products } from "@/content/products";
 
 const triggerClasses =
   "flex items-center gap-1 rounded-full px-3 py-2 text-sm font-semibold text-[var(--ink)] outline-none transition-colors hover:text-[var(--cta)] data-[state=open]:text-[var(--cta)]";
@@ -69,6 +70,35 @@ export function MegaMenu() {
                 className="mt-3 flex items-center justify-between rounded-xl border border-[var(--line)] p-3 text-sm font-semibold text-[var(--cta)] hover:border-[var(--color-sky)]"
               >
                 Explore all solutions
+              </Link>
+            </div>
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+
+        <NavigationMenu.Item>
+          <NavigationMenu.Trigger className={triggerClasses}>
+            Products
+            <ChevronDown size={14} aria-hidden="true" className="transition-transform duration-200 group-data-[state=open]:rotate-180" />
+          </NavigationMenu.Trigger>
+          <NavigationMenu.Content className="data-[motion=from-start]:animate-in data-[motion=from-start]:fade-in-0 data-[motion=from-start]:slide-in-from-left-4">
+            <div className="w-[420px] p-4">
+              <div className="grid gap-1.5">
+                {products.map((product) => (
+                  <Link
+                    key={product.slug}
+                    href={`/products/${product.slug}`}
+                    className="rounded-xl p-3 transition-colors hover:bg-[var(--color-sky)]/10"
+                  >
+                    <p className="text-sm font-bold text-[var(--ink)]">{product.name}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-[var(--ink-muted)] line-clamp-2">{product.tagline}</p>
+                  </Link>
+                ))}
+              </div>
+              <Link
+                href="/products"
+                className="mt-3 flex items-center justify-between rounded-xl border border-[var(--line)] p-3 text-sm font-semibold text-[var(--cta)] hover:border-[var(--color-sky)]"
+              >
+                View all products
               </Link>
             </div>
           </NavigationMenu.Content>

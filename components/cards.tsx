@@ -14,6 +14,7 @@ import {
 import type { Service } from "@/content/services";
 import type { Solution } from "@/content/solutions";
 import type { CaseStudy } from "@/content/case-studies";
+import type { ProductSummary } from "@/content/products";
 import { Tag } from "@/components/ui/primitives";
 import { TiltCard } from "@/components/motion/tilt-card";
 import { caseStudyTitleTransitionName } from "@/lib/view-transitions";
@@ -100,6 +101,37 @@ export function SolutionCard({ solution }: { solution: Solution }) {
             </span>
           ))}
         </div>
+      </Link>
+    </TiltCard>
+  );
+}
+
+export function ProductCard({ product }: { product: ProductSummary }) {
+  return (
+    <TiltCard>
+      <Link
+        href={`/products/${product.slug}`}
+        className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-7 transition-colors duration-300 hover:border-[var(--color-sky)] hover:shadow-[var(--shadow-elevated)] focus-visible:border-[var(--color-sky)]"
+      >
+        <SignalTrace />
+        <div>
+          <Tag style={{ backgroundColor: `color-mix(in srgb, ${product.accent} 14%, transparent)`, color: product.accent }}>
+            {product.category}
+          </Tag>
+          <h3 className="mt-4 text-2xl font-bold tracking-tight">{product.name}</h3>
+          <p className="mt-2 text-sm font-semibold" style={{ color: product.accent }}>
+            {product.tagline}
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-[var(--ink-muted)]">{product.summary}</p>
+        </div>
+        <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--cta)]">
+          Explore {product.name}
+          <ArrowUpRight
+            size={15}
+            aria-hidden="true"
+            className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          />
+        </span>
       </Link>
     </TiltCard>
   );
