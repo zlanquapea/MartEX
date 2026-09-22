@@ -2,6 +2,7 @@
 
 import Link, { type LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
+import { flushSync } from "react-dom";
 import type { AnchorHTMLAttributes, MouseEvent, ReactNode } from "react";
 
 type Props = LinkProps &
@@ -15,6 +16,17 @@ type Props = LinkProps &
  * between the two pages instead of hard-cutting. Everywhere else — no
  * support, reduced motion, modified clicks (new tab, etc.) — it behaves
  * exactly like a normal Link, so this never gets in the way of navigation.
+ *
+ * The callback passed to startViewTransition must not resolve until the
+ * new route has actually committed to the DOM — otherwise the browser
+ * captures its "after" snapshot while the old page is still showing,
+ * crossfades between two near-identical screenshots, and then hands back
+ * a live document that's still catching up, which reads as "the page
+ * didn't load" until a manual refresh. flushSync forces router.push's
+ * resulting re-render to commit synchronously before the callback
+ * returns, so the snapshot is accurate whenever the target route is
+ * already prefetched (the common case for on-screen links); a rAF-based
+ * guess had no such guarantee.
  */
 export function ViewTransitionLink({ href, onClick, children, ...rest }: Props) {
   const router = useRouter();
@@ -31,9 +43,8 @@ export function ViewTransitionLink({ href, onClick, children, ...rest }: Props) 
     const target = href.toString();
 
     document.startViewTransition(() => {
-      router.push(target);
-      return new Promise<void>((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      flushSync(() => {
+        router.push(target);
       });
     });
   }
