@@ -1,6 +1,6 @@
 import { Layers3, LineChart, ShieldCheck, TrendingUp, Workflow } from "lucide-react";
 import { Button, Eyebrow, SectionHeading } from "@/components/ui/primitives";
-import { ServiceCard, CaseStudyCard, ValuePropCard } from "@/components/cards";
+import { ServiceCard, CaseStudyCard, ValuePropCard, ProductCard } from "@/components/cards";
 import { SystemVisualization } from "@/components/motion/system-visualization";
 import { SplitHeading } from "@/components/motion/split-heading";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/reveal";
@@ -8,6 +8,7 @@ import { Scene } from "@/components/motion/scene";
 import { ProcessScrollNarrative } from "@/components/motion/process-scroll";
 import { services, maintenanceAndSupport } from "@/content/services";
 import { caseStudies } from "@/content/case-studies";
+import { products } from "@/content/products";
 import { audiences, company } from "@/content/company";
 
 export function Hero() {
@@ -100,6 +101,27 @@ export function ServicesGrid() {
         </div>
       </section>
     </Scene>
+  );
+}
+
+export function ProductsShowcase() {
+  return (
+    <section id="products" className="py-16">
+      <div className="container-page">
+        <SectionHeading
+          eyebrow="Products"
+          title="Software we build and run ourselves."
+          description="Beyond client engagements, MartEX designs, ships, and operates its own products."
+        />
+        <StaggerGroup className="grid gap-6 sm:grid-cols-2">
+          {products.map((product) => (
+            <StaggerItem key={product.slug} variant="resolve">
+              <ProductCard product={product} />
+            </StaggerItem>
+          ))}
+        </StaggerGroup>
+      </div>
+    </section>
   );
 }
 

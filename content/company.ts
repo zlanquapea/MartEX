@@ -49,6 +49,7 @@ export const audiences: Audience[] = [
 export const navLinks = [
   { label: "Services", href: "/services" },
   { label: "Solutions", href: "/solutions" },
+  { label: "Products", href: "/products" },
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
   { label: "Process", href: "/process" },
