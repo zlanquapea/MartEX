@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { WifiOff } from "lucide-react";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, productJsonLd } from "@/lib/structured-data";
@@ -7,10 +6,17 @@ import { Breadcrumbs, Button, Eyebrow, SectionHeading, Tag } from "@/components/
 import { SplitHeading } from "@/components/motion/split-heading";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/reveal";
 import { PhoneMockup } from "@/components/story/phone-mockup";
+import { WelcomeScreen, DiscoverScreen, TripScreen } from "@/components/story/liberia360-screens";
 import { getProductBySlug, liberia360 } from "@/content/products";
 
 const accent = "var(--color-tech-blue)";
 const product = getProductBySlug("liberia360")!;
+
+const phoneScreens = [
+  { key: "welcome", content: <WelcomeScreen /> },
+  { key: "discover", content: <DiscoverScreen /> },
+  { key: "trip", content: <TripScreen /> },
+];
 
 export const metadata: Metadata = buildMetadata({
   title: liberia360.name,
@@ -51,12 +57,9 @@ export default function Liberia360Page() {
       <div className="container-page grid items-center gap-12 lg:grid-cols-[1.05fr_0.75fr]">
         <div>
           <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Products", href: "/products" }, { label: liberia360.name }]} />
-          <div className="flex items-center gap-3">
-            <Image src={liberia360.logo} alt="" aria-hidden="true" width={40} height={40} className="rounded-full" />
-            <p className="text-xs font-bold uppercase tracking-[0.16em]" style={{ color: accent }}>
-              {product.category}
-            </p>
-          </div>
+          <p className="text-xs font-bold uppercase tracking-[0.16em]" style={{ color: accent }}>
+            {product.category}
+          </p>
           <SplitHeading
             as="h1"
             text={liberia360.tagline}
@@ -78,7 +81,7 @@ export default function Liberia360Page() {
             Designed &amp; built by MartEX
           </p>
         </div>
-        <PhoneMockup screens={liberia360.screens} accent={accent} />
+        <PhoneMockup screens={phoneScreens} accent={accent} />
       </div>
 
       {/* Platform note */}
@@ -100,7 +103,7 @@ export default function Liberia360Page() {
           <SectionHeading
             eyebrow="What it does"
             title="Everything a traveler needs, in one place."
-            description="Every capability below is implemented and shipping — not a roadmap item."
+            description="Everything below is real and working today — not just a promise."
           />
           <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {liberia360.featureAreas.map((feature) => (
@@ -121,7 +124,7 @@ export default function Liberia360Page() {
       <section className="mt-16">
         <div className="container-page">
           <Reveal className="rounded-3xl border border-dashed border-[var(--line)] p-8">
-            <Eyebrow>Still on the roadmap</Eyebrow>
+            <Eyebrow>Coming soon</Eyebrow>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--ink-muted)]">{liberia360.notYetImplemented}</p>
           </Reveal>
         </div>

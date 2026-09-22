@@ -1,12 +1,10 @@
 import { StaggerGroup, StaggerItem } from "@/components/motion/reveal";
-import { Tag } from "@/components/ui/primitives";
 import type { LichenModuleGroup } from "@/content/products";
 
 /**
- * The three-panel module breakdown from Lichen MD's own brochure, rendered
- * as connected cards instead of a flat feature list — each panel keeps its
- * grouping, tag codes, and the note/highlight callouts the brochure ties to
- * specific panels.
+ * The three-panel breakdown of what Lichen MD does, in plain language —
+ * each panel keeps its grouping and the note/highlight callouts the
+ * brochure ties to specific panels, without the internal module codes.
  */
 export function ModulePanels({ groups, accent = "var(--color-primary)" }: { groups: LichenModuleGroup[]; accent?: string }) {
   return (
@@ -21,17 +19,7 @@ export function ModulePanels({ groups, accent = "var(--color-primary)" }: { grou
             {group.modules.map((module) => (
               <StaggerItem key={module.title} variant="rise">
                 <div className="rounded-2xl border border-[var(--line)] p-4">
-                  <div className="flex flex-wrap gap-1.5">
-                    {module.tags.map((tag) => (
-                      <Tag
-                        key={tag}
-                        style={{ backgroundColor: `color-mix(in srgb, ${accent} 12%, transparent)`, color: accent }}
-                      >
-                        {tag}
-                      </Tag>
-                    ))}
-                  </div>
-                  <p className="mt-2.5 text-sm font-semibold text-[var(--ink)]">{module.title}</p>
+                  <p className="text-sm font-semibold text-[var(--ink)]">{module.title}</p>
                   <p className="mt-1 text-xs leading-relaxed text-[var(--ink-muted)]">{module.description}</p>
                 </div>
               </StaggerItem>

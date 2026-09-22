@@ -106,9 +106,9 @@ export default function LichenMDPage() {
       <section className="mt-20">
         <div className="container-page">
           <SectionHeading
-            eyebrow="What it includes"
-            title="One record, from front office to revenue."
-            description="Every module reads and writes the same patient chart — nothing re-entered, nothing lost at handoff."
+            eyebrow="What it does"
+            title="Everything a hospital needs, in one system."
+            description="From check-in to check-out, every department works from the same up-to-date patient file."
           />
           <ModulePanels groups={lichenMD.moduleGroups} accent={accent} />
         </div>
@@ -130,17 +130,17 @@ export default function LichenMDPage() {
             <p className="mt-6 text-sm leading-relaxed text-[var(--color-pale)]">{lichenMD.reporting.note}</p>
           </Reveal>
           <Reveal delay={0.08} className="flex flex-col justify-center rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-8">
-            <div className="flex flex-wrap items-center gap-2.5" aria-hidden="true">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-3">
               {lichenMD.journey.steps.map((step, index) => (
-                <div key={step} className="flex items-center gap-2.5">
+                <div key={step} className="flex items-center gap-2">
                   <span
-                    className="grid size-10 place-items-center rounded-full text-xs font-bold"
+                    className="rounded-full px-3.5 py-2 text-xs font-bold"
                     style={{ backgroundColor: `color-mix(in srgb, ${accent} 14%, transparent)`, color: accent }}
                   >
                     {step}
                   </span>
                   {index < lichenMD.journey.steps.length - 1 && (
-                    <span className="h-px w-6 bg-[var(--line)] sm:w-10" />
+                    <span aria-hidden="true" className="h-px w-4 shrink-0 bg-[var(--line)] sm:w-6" />
                   )}
                 </div>
               ))}
