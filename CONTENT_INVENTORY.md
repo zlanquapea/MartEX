@@ -22,9 +22,9 @@ placeholders are used instead, clearly marked, wherever a value is missing.
 
 ## Contact information (`content/company.ts` → `contact`)
 
-- [ ] Direct telephone / WhatsApp number
-- [ ] Primary email address
-- [ ] Canonical website URL (also needed for `NEXT_PUBLIC_SITE_URL`)
+- [x] Direct telephone / WhatsApp number (+231 771 9111 95, from the Lichen MD brochure)
+- [x] Primary email address (info@orith.tech, from the Lichen MD brochure)
+- [x] Canonical website URL: martex.com.lr (set `NEXT_PUBLIC_SITE_URL=https://martex.com.lr`)
 - [ ] Precise, publishable street address for the Monrovia office
 - [ ] Business hours
 - [ ] Social profile URLs (LinkedIn, X, Facebook, Instagram) — only the platforms MartEX
@@ -35,33 +35,30 @@ placeholders are used instead, clearly marked, wherever a value is missing.
 ## Legal (`app/privacy/page.tsx`, `app/terms/page.tsx`)
 
 - [ ] Legal entity name and registration details
-- [ ] Governing law / jurisdiction for disputes
-- [ ] Data retention periods and storage location for form submissions
-- [ ] Confirmation of whether analytics, cookies, or other automatic data collection will be
-      used (none is currently implemented — no consent banner exists because nothing needs
-      consent yet)
-- [ ] List of any approved third-party data processors (email delivery, CRM, booking
-      provider) once selected
-- [ ] Data-subject rights process (access/correction/deletion requests)
-- [ ] Intellectual-property and brand-usage terms
+- [x] Governing law / jurisdiction: Republic of Liberia (on /terms — confirm with counsel)
+- [x] Data retention and storage location for form submissions (MartEX email inbox, kept as long as needed — stated on /privacy)
+- [x] No analytics, cookies, or other automatic data collection (stated on /privacy; no
+      consent banner needed)
+- [x] Third-party processors listed on /privacy (Resend for email delivery, the hosting provider)
+- [x] Data-subject rights process (email request to info@orith.tech — stated on /privacy)
+- [x] Intellectual-property and brand-usage terms (on /terms)
 - [ ] Legal review and sign-off on both pages before publishing as final (not placeholder)
       content
-- [ ] "Last updated" dates for both pages
+- [x] "Last updated" dates for both pages (October 7, 2026)
 
 ## Forms and integrations
 
-- [ ] Booking delivery provider (`BOOKING_WEBHOOK_URL` / `BOOKING_WEBHOOK_TOKEN`) — receives
-      validated JSON + the uploaded requirements file and should schedule the meeting and
-      send a confirmation email
-- [ ] Contact delivery provider (`CONTACT_WEBHOOK_URL` / `CONTACT_WEBHOOK_TOKEN`)
-- [ ] Confirmation email copy and sender/reply-to addresses
+- [x] Booking delivery: emailed via Resend to `FORMS_INBOX_EMAIL`, with the uploaded file and
+      a visitor confirmation once `EMAIL_FROM` is set (see DEPLOYMENT.md). Webhook
+      forwarding remains optional.
+- [x] Contact delivery: emailed via Resend to `FORMS_INBOX_EMAIL`
+- [ ] Confirm the confirmation-email wording and the `EMAIL_FROM` sender address
 - [ ] Availability rules / calendar source of truth for consultation scheduling
 - [ ] Time-zone policy (the form currently offers a fixed list of common zones, defaulting
       conceptually to Monrovia/GMT)
-- [ ] Rate limiting and bot-protection strategy beyond the honeypot field already implemented
-      (e.g. a CAPTCHA or a provider-level rate limit) if submission volume warrants it
-- [ ] File-storage policy for uploaded requirements documents (retention period, access
-      control, provider)
+- [x] Per-connection rate limiting (5 submissions / 10 minutes) on top of the honeypot field;
+      add a CAPTCHA only if spam becomes a problem
+- [x] Uploaded documents are not stored by the website; they arrive as an email attachment (max 4MB)
 - [ ] Analytics/consent provider, if any is selected (currently none — no cookie banner
       exists)
 

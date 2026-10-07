@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { company, contact, footerLinks, navLinks } from "@/content/company";
+import { company, contact, contactLinks, footerLinks, navLinks } from "@/content/company";
 import { ThemeToggle } from "./theme";
 
 export function Footer() {
@@ -56,27 +56,37 @@ export function Footer() {
           <p className="text-xs font-bold uppercase tracking-widest text-[var(--ink-muted)]">Contact</p>
           <ul className="mt-4 grid gap-2.5 text-sm text-[var(--ink-muted)]">
             <li>{contact.officeLocation}</li>
-            <li>{contact.email}</li>
-            <li>{contact.phone}</li>
-            <li className="flex gap-3 pt-1">
-              {(["linkedin", "x", "facebook", "instagram"] as const).map((platform) =>
-                contact.social[platform] ? (
-                  <a
-                    key={platform}
-                    href={contact.social[platform]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="capitalize hover:text-[var(--cta)]"
-                  >
-                    {platform}
-                  </a>
-                ) : (
-                  <span key={platform} className="capitalize text-[var(--ink-muted)]/50">
-                    {platform}
-                  </span>
-                )
-              )}
-            </li>
+            {contact.email && (
+              <li>
+                <a href={contactLinks.email} className="hover:text-[var(--cta)]">
+                  {contact.email}
+                </a>
+              </li>
+            )}
+            {contact.phone && (
+              <li>
+                <a href={contactLinks.phone} className="hover:text-[var(--cta)]">
+                  {contact.phone}
+                </a>
+              </li>
+            )}
+            {(["linkedin", "x", "facebook", "instagram"] as const).some((platform) => contact.social[platform]) && (
+              <li className="flex gap-3 pt-1">
+                {(["linkedin", "x", "facebook", "instagram"] as const)
+                  .filter((platform) => contact.social[platform])
+                  .map((platform) => (
+                    <a
+                      key={platform}
+                      href={contact.social[platform]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="capitalize hover:text-[var(--cta)]"
+                    >
+                      {platform}
+                    </a>
+                  ))}
+              </li>
+            )}
           </ul>
         </div>
       </div>

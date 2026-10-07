@@ -124,31 +124,16 @@ browser (`lib/validations.ts`) **and again** in their Route Handlers
 alone. Both include a hidden honeypot field for basic spam prevention. No form data is ever
 written to `localStorage`/`sessionStorage`.
 
-Neither route has a real delivery backend wired up, by design — no credentials were
-available at build time:
+Both routes email each submission to `FORMS_INBOX_EMAIL` through Resend (`lib/email.ts`),
+with the visitor as reply-to; bookings include the uploaded requirements document (PDF/Word/
+text, up to 4MB to stay under Vercel's request-size limit) and, once `EMAIL_FROM` is set to a
+verified sender, send the visitor a confirmation. Each route is also rate limited per
+connection (`lib/rate-limit.ts`). Optionally, `BOOKING_WEBHOOK_URL` / `CONTACT_WEBHOOK_URL`
+forward submissions to another system as well. With no delivery configured, the routes return
+**HTTP 503** and the UI shows MartEX's email and phone instead — a submission is never faked
+as successful.
 
-- **Booking** (`BOOKING_WEBHOOK_URL`): when unset, `POST /api/booking` returns **HTTP 503**
-  with a message stating nothing was submitted (the UI surfaces this clearly — it never fakes
-  a success). When set, the route re-validates the submission server-side, generates a
-  reference number, and forwards the entire multipart `FormData` (including the uploaded
-  requirements file, if any) directly to that URL via `fetch`, optionally with a
-  `BOOKING_WEBHOOK_TOKEN` bearer token.
-- **Contact** (`CONTACT_WEBHOOK_URL` / `CONTACT_WEBHOOK_TOKEN`): same pattern, as JSON.
-
-### Connecting the booking form to a real provider
-
-1. Stand up (or choose) an endpoint that accepts a `multipart/form-data` POST — for example a
-   small serverless function that writes to a CRM, sends a Slack/email notification, and
-   triggers a confirmation email using the submitted `reference` field.
-2. Set `BOOKING_WEBHOOK_URL` (and `BOOKING_WEBHOOK_TOKEN` if the endpoint requires auth) in
-   your deployment environment.
-3. If the requirements-document upload should be persisted, have that endpoint stream the
-   `requirementsDocument` file part to your object storage of choice (S3-compatible storage,
-   etc.) — this app intentionally does not depend on a specific storage provider.
-4. Confirm the confirmation-email copy, sender address, and reply-to address with MartEX
-   before enabling this in production.
-
-Connect the contact form the same way with `CONTACT_WEBHOOK_URL`.
+Setup steps are in [`DEPLOYMENT.md`](./DEPLOYMENT.md).
 
 ## Theming
 
@@ -243,16 +228,8 @@ dark surfaces, swap that in and drop the chip.
 
 ## Deployment
 
-Designed for Vercel (or any Next.js-compatible Node host):
-
-1. Set `NEXT_PUBLIC_SITE_URL` to the canonical production origin.
-2. Set the booking/contact webhook variables once real providers are chosen (forms stay in
-   "not yet connected" mode otherwise — they will not silently fail).
-3. Run `npm run build` and deploy.
-4. Complete legal review of `/privacy` and `/terms` (both are structural placeholders — see
-   `CONTENT_INVENTORY.md`) before launch.
-5. Run Lighthouse and an automated accessibility check, and manually verify keyboard-only
-   navigation and screen-reader labeling.
+Step-by-step instructions (Vercel, Resend email delivery, domain and DNS, post-launch checks)
+are in [`DEPLOYMENT.md`](./DEPLOYMENT.md).
 
 ## Replacing placeholders
 

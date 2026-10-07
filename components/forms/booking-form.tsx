@@ -18,7 +18,8 @@ const stepFields: FieldPath<BookingFormValues>[][] = [
   [],
 ];
 
-const MAX_FILE_SIZE_MB = 10;
+// Kept under Vercel's 4.5MB request-body limit; app/api/booking enforces the same cap.
+const MAX_FILE_SIZE_MB = 4;
 
 export function BookingForm() {
   const [step, setStep] = useState(1);
@@ -83,7 +84,7 @@ export function BookingForm() {
         setSubmitState("error");
         setStatusMessage(
           data?.message ??
-            "Booking submissions aren't connected to a delivery provider yet, so nothing was sent. Please email us directly in the meantime."
+            "The request could not be sent. Please try again, or contact us directly by email or WhatsApp."
         );
         return;
       }
@@ -101,7 +102,7 @@ export function BookingForm() {
       <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-10 text-center">
         <FormStatusBanner
           status="success"
-          message={`Thank you — your consultation request was received. Reference: ${reference}. A confirmation email will follow once our team reviews your request.`}
+          message={`Thank you — your consultation request was received. Reference: ${reference}. Our team will contact you shortly to confirm the meeting time.`}
         />
       </div>
     );

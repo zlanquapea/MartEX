@@ -4,7 +4,7 @@ import { buildMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, contactPointJsonLd } from "@/lib/structured-data";
 import { Breadcrumbs, Button, Eyebrow } from "@/components/ui/primitives";
 import { ContactForm } from "@/components/forms/contact-form";
-import { company, contact } from "@/content/company";
+import { company, contact, contactLinks } from "@/content/company";
 
 export const metadata: Metadata = buildMetadata({
   title: "Contact",
@@ -31,7 +31,7 @@ export default function ContactPage() {
       </div>
 
       <div className="container-page mt-16 grid gap-10 lg:grid-cols-[1fr_1.2fr]">
-        <div className="grid gap-6">
+        <div className="grid content-start gap-6">
           <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-7">
             <div className="grid gap-5">
               <div className="flex items-start gap-3">
@@ -39,36 +39,58 @@ export default function ContactPage() {
                 <div>
                   <p className="text-sm font-bold text-[var(--ink)]">Office</p>
                   <p className="text-sm text-[var(--ink-muted)]">{contact.officeLocation}</p>
-                  <p className="text-sm text-[var(--ink-muted)]">{contact.addressLine}</p>
+                  {contact.addressLine && <p className="text-sm text-[var(--ink-muted)]">{contact.addressLine}</p>}
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <Phone size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--cta)]" />
-                <div>
-                  <p className="text-sm font-bold text-[var(--ink)]">Phone / WhatsApp</p>
-                  <p className="text-sm text-[var(--ink-muted)]">{contact.phone}</p>
+              {contact.phone && (
+                <div className="flex items-start gap-3">
+                  <Phone size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--cta)]" />
+                  <div>
+                    <p className="text-sm font-bold text-[var(--ink)]">Phone / WhatsApp</p>
+                    <p className="text-sm text-[var(--ink-muted)]">
+                      <a href={contactLinks.phone} className="hover:text-[var(--cta)]">
+                        {contact.phone}
+                      </a>
+                      {" · "}
+                      <a href={contactLinks.whatsapp} target="_blank" rel="noopener noreferrer" className="font-semibold text-[var(--cta)]">
+                        Chat on WhatsApp
+                      </a>
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Mail size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--cta)]" />
-                <div>
-                  <p className="text-sm font-bold text-[var(--ink)]">Email</p>
-                  <p className="text-sm text-[var(--ink-muted)]">{contact.email}</p>
+              )}
+              {contact.email && (
+                <div className="flex items-start gap-3">
+                  <Mail size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--cta)]" />
+                  <div>
+                    <p className="text-sm font-bold text-[var(--ink)]">Email</p>
+                    <a href={contactLinks.email} className="text-sm text-[var(--ink-muted)] hover:text-[var(--cta)]">
+                      {contact.email}
+                    </a>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Clock size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--cta)]" />
-                <div>
-                  <p className="text-sm font-bold text-[var(--ink)]">Business hours</p>
-                  <p className="text-sm text-[var(--ink-muted)]">{contact.hours}</p>
+              )}
+              {contact.hours && (
+                <div className="flex items-start gap-3">
+                  <Clock size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--cta)]" />
+                  <div>
+                    <p className="text-sm font-bold text-[var(--ink)]">Business hours</p>
+                    <p className="text-sm text-[var(--ink-muted)]">{contact.hours}</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
-          <div className="flex aspect-[4/3] items-center justify-center rounded-3xl border border-dashed border-[var(--line)] bg-[var(--surface)] text-center text-sm text-[var(--ink-muted)]">
-            Map embed placeholder — add MAP_EMBED_URL once the office location is confirmed for publication.
-          </div>
+          {contact.mapEmbedUrl && (
+            <iframe
+              title={`Map of the ${company.name} office`}
+              src={contact.mapEmbedUrl}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="aspect-[4/3] w-full rounded-3xl border border-[var(--line)]"
+            />
+          )}
 
           <div className="rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-7">
             <p className="text-sm font-bold text-[var(--ink)]">Prefer to schedule directly?</p>

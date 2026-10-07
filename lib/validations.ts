@@ -35,8 +35,17 @@ export const bookingStepTwoSchema = z.object({
   }),
 });
 
+/** Today's date as YYYY-MM-DD in the visitor's own time zone. */
+function todayIsoDate() {
+  const now = new Date();
+  return new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
+}
+
 export const bookingStepThreeSchema = z.object({
-  preferredDate: z.string().min(1, "Select a preferred date"),
+  preferredDate: z
+    .string()
+    .min(1, "Select a preferred date")
+    .refine((value) => value >= todayIsoDate(), "Choose today or a future date"),
   preferredTime: z.string().min(1, "Select a preferred time"),
   timeZone: z.string().min(1, "Select your time zone"),
   meetingFormat: z.enum(["Video call", "Phone call", "In-person"], {
