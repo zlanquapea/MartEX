@@ -3,7 +3,7 @@ import { buildMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { Breadcrumbs, Eyebrow } from "@/components/ui/primitives";
 import { BookingForm } from "@/components/forms/booking-form";
-import { company, contact } from "@/content/company";
+import { company, contact, contactLinks } from "@/content/company";
 
 export const metadata: Metadata = buildMetadata({
   title: "Book a Consultation",
@@ -35,7 +35,11 @@ export default function BookPage() {
       <div className="container-page mt-14 max-w-3xl">
         <BookingForm />
         <p className="mt-6 text-center text-sm text-[var(--ink-muted)]">
-          Prefer another way to reach us? Contact {contact.email} or visit the{" "}
+          Prefer another way to reach us? Email{" "}
+          <a href={contactLinks.email} className="font-semibold text-[var(--cta)]">
+            {contact.email}
+          </a>
+          , call {contact.phone}, or visit the{" "}
           <a href="/contact" className="font-semibold text-[var(--cta)]">
             contact page
           </a>

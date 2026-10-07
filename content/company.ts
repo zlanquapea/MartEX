@@ -14,17 +14,18 @@ export const company = {
 } as const;
 
 /**
- * Contact details are intentionally unset. Do not publish invented phone
- * numbers, addresses, or handles. Populate these once MartEX supplies
- * verified information — see CONTENT_INVENTORY.md.
+ * Phone, email, and website come from MartEX's approved Lichen MD brochure.
+ * Fields left empty (street address, hours, map, social profiles) are hidden
+ * on the site rather than shown as placeholders — fill them in once MartEX
+ * supplies verified details. See CONTENT_INVENTORY.md.
  */
 export const contact = {
   officeLocation: "Monrovia, Liberia",
-  addressLine: "[Precise street address to be provided]",
-  phone: "[Telephone / WhatsApp number to be provided]",
-  email: "[Email address to be provided]",
-  website: "[Canonical website URL to be provided]",
-  hours: "[Business hours to be provided]",
+  addressLine: "",
+  phone: "+231 771 9111 95",
+  email: "info@orith.tech",
+  website: "martex.com.lr",
+  hours: "",
   mapEmbedUrl: "",
   social: {
     linkedin: "",
@@ -33,6 +34,13 @@ export const contact = {
     instagram: "",
   },
 } as const;
+
+const phoneDigits = contact.phone.replace(/[^\d+]/g, "");
+export const contactLinks = {
+  email: contact.email ? `mailto:${contact.email}` : "",
+  phone: phoneDigits ? `tel:${phoneDigits}` : "",
+  whatsapp: phoneDigits ? `https://wa.me/${phoneDigits.replace("+", "")}` : "",
+};
 
 export type Audience = { name: string; description: string };
 

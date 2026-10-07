@@ -16,61 +16,66 @@ export default function PrivacyPage() {
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Privacy Policy" }]} />
         <Eyebrow>Legal</Eyebrow>
         <h1 className="mt-4 text-[clamp(2rem,4.5vw,3.25rem)] tracking-tight">Privacy Policy</h1>
-        <p className="mt-4 text-sm text-[var(--ink-muted)]">Last updated: [Date to be confirmed before publication]</p>
+        <p className="mt-4 text-sm text-[var(--ink-muted)]">Last updated: October 7, 2026</p>
 
         <div className="prose-legal mt-10">
           <p>
-            This Privacy Policy explains how {company.name} ({contact.officeLocation}) handles information submitted
-            through this website, including the contact and consultation booking forms.
-          </p>
-          <p className="rounded-2xl border border-dashed border-[var(--line)] bg-[var(--surface)] p-5 text-sm">
-            <strong>Editable configuration notice:</strong> this policy is a structural placeholder. It must be
-            reviewed and completed by {company.name} and, where appropriate, qualified legal counsel before launch.
-            Do not publish this page as final legal content without that review. See CONTENT_INVENTORY.md for the
-            specific details required.
+            This Privacy Policy explains how {company.name} ({contact.officeLocation}) handles information you submit
+            through this website, including the contact form and the consultation booking form.
           </p>
 
           <h2>Information we collect</h2>
           <ul>
-            <li>Contact details you provide through the contact form (name, email, organization, message).</li>
+            <li>Contact form: your name, email address, organization (optional), and message.</li>
             <li>
-              Booking details you provide through the consultation form (contact details, project needs, meeting
-              preferences, and any uploaded file).
+              Consultation booking form: your contact details, information about your project and its needs, your
+              meeting preferences, and any document you choose to attach.
             </li>
-            <li>[Confirm whether analytics, cookies, or other automatic collection will be used before launch.]</li>
+            <li>
+              This website does not use analytics, advertising, or tracking cookies. Your light/dark theme choice is
+              saved in your own browser so the site remembers it; it is never sent to us.
+            </li>
           </ul>
 
-          <h2>How information is used</h2>
+          <h2>How we use it</h2>
           <ul>
-            <li>To respond to inquiries and schedule requested consultations.</li>
-            <li>To evaluate and scope potential engagements.</li>
-            <li>[Confirm any additional agreed uses, such as newsletters, before launch.]</li>
+            <li>To reply to your message and to schedule the consultation you requested.</li>
+            <li>To understand and scope a potential project with you.</li>
+            <li>We do not sell your information or add you to marketing lists.</li>
           </ul>
 
-          <h2>How information is protected</h2>
+          <h2>How it is delivered and stored</h2>
           <p>
-            Form submissions are validated on the server and are not stored in browser storage. Delivery to
-            {" "}{company.name}&rsquo;s systems depends on the integration configured for each form — see
-            README.md for details. [Confirm data retention periods, storage location, and access controls before
-            launch.]
+            Submissions are checked on our server and then delivered by email to the {company.name} team. Nothing you
+            type into a form is stored in your browser. Submissions are kept in our email system only for as long as
+            needed to respond to you and, if we work together, for the duration of that relationship.
           </p>
 
-          <h2>Third parties</h2>
+          <h2>Service providers</h2>
           <p>
-            [List any approved third-party processors — such as email delivery, CRM, or booking providers — once
-            selected. No third-party integrations are active in this build until the relevant environment variables
-            are configured.]
+            We use{" "}
+            <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
+              Resend
+            </a>{" "}
+            to deliver form submissions by email, and our hosting provider to run this website. They process your
+            information only to provide those services to us.
           </p>
 
-          <h2>Your rights</h2>
+          <h2>Your choices and rights</h2>
           <p>
-            [Confirm applicable data-subject rights and how a person can request access to, correction of, or
-            deletion of their information.]
+            You can ask us at any time to see, correct, or delete the information you sent us. Email{" "}
+            {contact.email} and we will respond as soon as possible.
+          </p>
+
+          <h2>Changes to this policy</h2>
+          <p>
+            If we change how we handle information, we will update this page and the &ldquo;last updated&rdquo; date
+            above.
           </p>
 
           <h2>Contact</h2>
           <p>
-            Questions about this policy can be directed to {contact.email} or {contact.officeLocation}.
+            Questions about this policy can be sent to {contact.email} or by phone/WhatsApp on {contact.phone}.
           </p>
         </div>
       </div>

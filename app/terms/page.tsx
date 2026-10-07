@@ -16,15 +16,9 @@ export default function TermsPage() {
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Terms of Service" }]} />
         <Eyebrow>Legal</Eyebrow>
         <h1 className="mt-4 text-[clamp(2rem,4.5vw,3.25rem)] tracking-tight">Terms of Service</h1>
-        <p className="mt-4 text-sm text-[var(--ink-muted)]">Last updated: [Date to be confirmed before publication]</p>
+        <p className="mt-4 text-sm text-[var(--ink-muted)]">Last updated: October 7, 2026</p>
 
         <div className="prose-legal mt-10">
-          <p className="rounded-2xl border border-dashed border-[var(--line)] bg-[var(--surface)] p-5 text-sm">
-            <strong>Editable configuration notice:</strong> this page is a structural placeholder. It must be
-            reviewed and completed by {company.name} and, where appropriate, qualified legal counsel before launch.
-            See CONTENT_INVENTORY.md for the specific details required.
-          </p>
-
           <h2>Use of this website</h2>
           <p>
             This website is provided by {company.name} ({contact.officeLocation}) to share information about our
@@ -40,11 +34,16 @@ export default function TermsPage() {
 
           <h2>Intellectual property</h2>
           <p>
-            [Confirm ownership and usage terms for site content, the MartEX name, and brand assets before launch.]
+            The content of this website, the {company.name} name and logo, and the names and logos of our products
+            belong to {company.name}. You may share links to this website, but you may not copy or reuse its content
+            or brand assets for commercial purposes without our written permission.
           </p>
 
           <h2>Governing law</h2>
-          <p>[Confirm the governing jurisdiction and dispute-resolution process before launch.]</p>
+          <p>
+            These terms are governed by the laws of the Republic of Liberia. Any dispute will first be discussed in
+            good faith; if it cannot be resolved that way, it will be handled by the competent courts of Liberia.
+          </p>
 
           <h2>Changes to these terms</h2>
           <p>{company.name} may update these terms from time to time. Material changes will be reflected by the &ldquo;last updated&rdquo; date above.</p>
