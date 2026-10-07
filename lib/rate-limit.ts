@@ -1,9 +1,9 @@
 /**
  * Best-effort, in-memory rate limiting for the form endpoints: a fixed number
- * of submissions per client IP per window. On serverless hosts each instance
- * keeps its own counts, so this blunts bursts from a single source rather than
- * guaranteeing a global limit — together with the honeypot field it is enough
- * for a marketing site's form volume. Swap in a shared store (e.g. Upstash
+ * of submissions per client IP per window. On a single long-running server
+ * (Railway) the counts are exact; on serverless hosts each instance keeps its
+ * own counts, so it only blunts bursts. Together with the honeypot field it is
+ * enough for a marketing site's form volume. Swap in a shared store (e.g. Upstash
  * Redis) if abuse ever becomes a real problem.
  */
 const hits = new Map<string, number[]>();
@@ -28,6 +28,9 @@ export function isRateLimited(key: string, { limit = 5, windowMs = 10 * 60 * 100
 }
 
 export function clientKey(request: Request, scope: string) {
+  // Prefer X-Real-IP, which the host's proxy (Railway, Vercel) sets itself;
+  // the first X-Forwarded-For entry can be supplied by the client.
+  const realIp = request.headers.get("x-real-ip")?.trim();
   const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  return `${scope}:${forwarded || request.headers.get("x-real-ip") || "unknown"}`;
+  return `${scope}:${realIp || forwarded || "unknown"}`;
 }

@@ -6,7 +6,7 @@ import { company, contact } from "@/content/company";
 
 export const runtime = "nodejs";
 
-/** Stays under Vercel's 4.5MB request-body limit for serverless functions. */
+/** Keeps booking emails (and their attachment) a reasonable size; mirrored in the booking form. */
 const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
 const ALLOWED_EXTENSIONS = [".pdf", ".doc", ".docx", ".txt"];
 

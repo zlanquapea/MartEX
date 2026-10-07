@@ -18,7 +18,7 @@ const stepFields: FieldPath<BookingFormValues>[][] = [
   [],
 ];
 
-// Kept under Vercel's 4.5MB request-body limit; app/api/booking enforces the same cap.
+// Keeps booking emails a reasonable size; app/api/booking enforces the same cap.
 const MAX_FILE_SIZE_MB = 4;
 
 export function BookingForm() {

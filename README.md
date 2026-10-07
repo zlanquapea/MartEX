@@ -126,7 +126,7 @@ written to `localStorage`/`sessionStorage`.
 
 Both routes email each submission to `FORMS_INBOX_EMAIL` through Resend (`lib/email.ts`),
 with the visitor as reply-to; bookings include the uploaded requirements document (PDF/Word/
-text, up to 4MB to stay under Vercel's request-size limit) and, once `EMAIL_FROM` is set to a
+text, up to 4MB) and, once `EMAIL_FROM` is set to a
 verified sender, send the visitor a confirmation. Each route is also rate limited per
 connection (`lib/rate-limit.ts`). Optionally, `BOOKING_WEBHOOK_URL` / `CONTACT_WEBHOOK_URL`
 forward submissions to another system as well. With no delivery configured, the routes return
@@ -228,7 +228,7 @@ dark surfaces, swap that in and drop the chip.
 
 ## Deployment
 
-Step-by-step instructions (Vercel, Resend email delivery, domain and DNS, post-launch checks)
+Step-by-step instructions (Railway, Resend email delivery, domain and DNS, post-launch checks)
 are in [`DEPLOYMENT.md`](./DEPLOYMENT.md).
 
 ## Replacing placeholders
