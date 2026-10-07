@@ -80,6 +80,8 @@
   --cta: #336ab4;
   --cta-ink: #ffffff;
   --shadow-elevated: 0 24px 70px -20px rgb(13 23 45 / 0.18);
+  /* Küü's own brand terracotta, for its product page; lightened in dark mode for contrast. */
+  --kuu: #b5461b;
   color-scheme: light;
 }
 
@@ -93,6 +95,7 @@
   --cta: #5ea1df;
   --cta-ink: #07101f;
   --shadow-elevated: 0 24px 70px -20px rgb(0 0 0 / 0.55);
+  --kuu: #ea9c5e;
   color-scheme: dark;
 }
 
@@ -200,6 +203,19 @@
   .btn-shimmer:focus-visible::after {
     transform: translateX(120%);
   }
+}
+
+/* Route arrival (see components/motion/route-transition.tsx). Only ever
+   animates *towards* the element's natural, fully visible state. */
+@keyframes route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.route-enter {
+  animation: route-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

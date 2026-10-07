@@ -113,7 +113,7 @@ export function ProductsShowcase() {
           title="Software we build and run ourselves."
           description="Beyond client engagements, MartEX designs, ships, and operates its own products."
         />
-        <StaggerGroup className="grid gap-6 sm:grid-cols-2">
+        <StaggerGroup className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => (
             <StaggerItem key={product.slug} variant="resolve">
               <ProductCard product={product} />

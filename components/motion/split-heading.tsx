@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "motion/react";
-import type { ElementType } from "react";
+import { motion, type Variants } from "motion/react";
+import { Fragment, type ElementType } from "react";
 import { cn } from "@/lib/utils";
 import { useIsReducedMotion } from "./use-reduced-motion";
 
@@ -34,30 +34,37 @@ export function SplitHeading({
   const shouldReduceMotion = useIsReducedMotion();
   const words = text.split(" ");
 
+  // The in-view check must observe the (unclipped) word container, not the
+  // words themselves: each word starts translated fully below its
+  // overflow-hidden mask, so an IntersectionObserver on the word sees zero
+  // visible area and never fires — leaving every heading permanently hidden.
+  const word: Variants = {
+    hidden: { y: shouldReduceMotion ? "0%" : "115%" },
+    show: (index: number) => ({
+      y: "0%",
+      transition: shouldReduceMotion
+        ? { duration: 0 }
+        : { duration: 0.75, delay: delayStart + index * stagger, ease: [0.16, 1, 0.3, 1] },
+    }),
+  };
+
   return (
     <Tag className={className}>
       <span className="sr-only">{text}</span>
-      <span aria-hidden="true">
-        {words.map((word, index) => (
-          <span key={`${word}-${index}`} className="inline-block overflow-hidden pb-[0.08em]">
-            <motion.span
-              className={cn("inline-block will-change-transform", wordClassName)}
-              initial={{ y: "115%" }}
-              whileInView={shouldReduceMotion ? undefined : { y: "0%" }}
-              animate={shouldReduceMotion ? { y: "0%" } : undefined}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={
-                shouldReduceMotion
-                  ? { duration: 0 }
-                  : { duration: 0.75, delay: delayStart + index * stagger, ease: [0.16, 1, 0.3, 1] }
-              }
-            >
-              {word}
-              {index < words.length - 1 ? " " : ""}
-            </motion.span>
-          </span>
+      <motion.span aria-hidden="true" initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
+        {words.map((w, index) => (
+          // The space between words sits outside the inline-block mask:
+          // trailing whitespace inside an inline-block collapses away.
+          <Fragment key={`${w}-${index}`}>
+            <span className="inline-block overflow-hidden pb-[0.08em]">
+              <motion.span className={cn("inline-block will-change-transform", wordClassName)} variants={word} custom={index}>
+                {w}
+              </motion.span>
+            </span>
+            {index < words.length - 1 ? " " : null}
+          </Fragment>
         ))}
-      </span>
+      </motion.span>
     </Tag>
   );
 }

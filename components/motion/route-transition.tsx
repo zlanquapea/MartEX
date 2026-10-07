@@ -1,34 +1,39 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
-import { useIsReducedMotion } from "./use-reduced-motion";
+import { useEffect, useRef, type ReactNode } from "react";
 
 /**
- * A short, deliberate cross-fade between routes so navigating feels like
- * moving to the next scene rather than an instant swap. `initial={false}`
- * keeps this out of the very first page load — it only plays on actual
- * client-side navigations. Reduced-motion visitors get an untouched,
- * instant swap; nothing here delays data that's already ready to show.
+ * A short fade-up as each new route arrives, so navigating feels like moving
+ * to the next scene rather than an instant swap.
+ *
+ * This is deliberately enter-only and pure CSS. The previous version wrapped
+ * the page in `AnimatePresence mode="wait"` keyed by pathname, which does not
+ * work with the App Router: by the time the pathname changes, `children`
+ * already renders the *new* route, so the "exiting" element faded the new
+ * page out to opacity 0 and the entering element never mounted — leaving a
+ * blank page until a manual refresh. A keyed div with a CSS animation has no
+ * exit phase to get stuck in, and its end state is the element's natural
+ * visible state, so content can never be left hidden.
+ *
+ * The very first page load is skipped so server-rendered content is visible
+ * immediately; reduced-motion visitors get an instant swap via the global
+ * prefers-reduced-motion rule in globals.css.
  */
 export function RouteTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const shouldReduceMotion = useIsReducedMotion();
+  const firstPathname = useRef(pathname);
+  const hasNavigated = useRef(false);
 
-  if (shouldReduceMotion) return <>{children}</>;
+  useEffect(() => {
+    if (pathname !== firstPathname.current) hasNavigated.current = true;
+  }, [pathname]);
+
+  const animate = hasNavigated.current || pathname !== firstPathname.current;
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.div
-        key={pathname}
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <div key={pathname} className={animate ? "route-enter" : undefined}>
+      {children}
+    </div>
   );
 }
