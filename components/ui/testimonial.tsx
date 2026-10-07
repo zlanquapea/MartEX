@@ -1,9 +1,4 @@
-/**
- * Testimonial display component — intentionally not rendered anywhere yet.
- * No client quotation has been verified or approved for publication. Wire
- * this into a page only after MartEX supplies an attributed, consented
- * quotation (see CONTENT_INVENTORY.md).
- */
+/** A single client quotation; fed from content/testimonials.ts. */
 export function Testimonial({
   quote,
   attribution,

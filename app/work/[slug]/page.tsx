@@ -58,7 +58,7 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
       <div className="container-page max-w-3xl">
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Work", href: "/work" }, { label: study.title }]} />
         <div className="flex flex-wrap items-center gap-2">
-          <Tag>Concept solution</Tag>
+          <Tag>{study.kind === "product" ? "MartEX product" : "Concept solution"}</Tag>
           <span className="text-sm font-medium text-[var(--ink-muted)]">{study.industry}</span>
         </div>
         <Eyebrow>Case study</Eyebrow>
@@ -69,6 +69,13 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
           {study.title}
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-[var(--ink-muted)]">{study.summary}</p>
+        {study.productHref && (
+          <div className="mt-8">
+            <Button href={study.productHref} variant="secondary">
+              Explore the product
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="container-page mt-16 grid max-w-3xl gap-6">

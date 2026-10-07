@@ -27,9 +27,8 @@ placeholders are used instead, clearly marked, wherever a value is missing.
 - [x] Canonical website URL: martex.com.lr (set `NEXT_PUBLIC_SITE_URL=https://martex.com.lr`)
 - [ ] Precise, publishable street address for the Monrovia office
 - [ ] Business hours
-- [ ] Social profile URLs (LinkedIn, X, Facebook, Instagram) — only the platforms MartEX
-      actually maintains should be filled in; others should stay blank rather than linking to
-      a placeholder
+- [x] Social profiles: Facebook only (linked in the footer). Add LinkedIn, X, or Instagram in
+      `content/company.ts` if MartEX opens them; empty ones stay hidden
 - [ ] Map embed URL/coordinates for the `/contact` page map placeholder
 
 ## Legal (`app/privacy/page.tsx`, `app/terms/page.tsx`)
@@ -78,8 +77,9 @@ solution" with "Request pricing." Before naming and launching a real product:
 
 ## Case studies (`content/case-studies.ts`)
 
-All three current entries are labeled "Concept solution" capability demonstrations with no
-real client involved. Before publishing a real case study:
+Three entries are MartEX's own products (Lichen MD, LIBERIA360, Küü), written from their
+documentation, labeled "MartEX product". Three more are labeled "Concept solution"
+capability demonstrations with no real client involved. Before publishing a client case study:
 
 - [ ] Written client consent to be named and quoted
 - [ ] Verified challenge, discovery, solution, and outcome narrative
@@ -99,6 +99,6 @@ real client involved. Before publishing a real case study:
 
 ## Testimonials
 
-- [ ] At least one verified, attributed, consented client quotation. The `Testimonial`
-      component (`components/ui/testimonial.tsx`) exists but is intentionally not rendered
-      anywhere until this exists.
+- [ ] At least one verified, attributed, consented client quotation. Add it to
+      `content/testimonials.ts`; the home page shows the testimonials row automatically once
+      the list isn't empty.

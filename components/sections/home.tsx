@@ -8,6 +8,8 @@ import { Scene } from "@/components/motion/scene";
 import { ProcessScrollNarrative } from "@/components/motion/process-scroll";
 import { services, maintenanceAndSupport } from "@/content/services";
 import { caseStudies } from "@/content/case-studies";
+import { testimonials } from "@/content/testimonials";
+import { Testimonial } from "@/components/ui/testimonial";
 import { products } from "@/content/products";
 import { audiences, company } from "@/content/company";
 
@@ -159,16 +161,22 @@ export function FeaturedWork() {
         <div className="container-page">
           <SectionHeading
             eyebrow="Featured work"
-            title="Evidence, without invention."
-            description="Verified client case studies will appear here once approved. Until then, explore clearly labeled concept demonstrations."
+            title="Built, shipped, and running."
+            description="How we designed and built our own products — the same process we bring to every client project."
           />
           <StaggerGroup className="grid gap-5 lg:grid-cols-3">
-            {caseStudies.map((caseStudy) => (
+            {caseStudies.filter((caseStudy) => caseStudy.kind === "product").map((caseStudy) => (
               <StaggerItem key={caseStudy.slug} variant="resolve">
                 <CaseStudyCard caseStudy={caseStudy} />
               </StaggerItem>
             ))}
           </StaggerGroup>
+          <TestimonialsRow />
+          <div className="mt-10">
+            <Button href="/work" variant="secondary">
+              See all work
+            </Button>
+          </div>
         </div>
       </section>
     </Scene>
@@ -231,5 +239,17 @@ export function FinalCta() {
         </Reveal>
       </div>
     </section>
+  );
+}
+
+/** Renders only once content/testimonials.ts has at least one approved quote. */
+function TestimonialsRow() {
+  if (testimonials.length === 0) return null;
+  return (
+    <div className="mt-10 grid gap-5 lg:grid-cols-2">
+      {testimonials.map((testimonial) => (
+        <Testimonial key={testimonial.attribution} quote={testimonial.quote} attribution={testimonial.attribution} />
+      ))}
+    </div>
   );
 }

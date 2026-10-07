@@ -24,12 +24,12 @@ export default function WorkPage() {
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Work" }]} />
         <Eyebrow>Work</Eyebrow>
         <h1 className="mt-4 max-w-3xl text-[clamp(2.25rem,5vw,4rem)] leading-[1.03] tracking-tight">
-          Evidence, without invention.
+          Software we&rsquo;ve built, and how we&rsquo;d build yours.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[var(--ink-muted)]">
-          No verified client case studies are published yet. The entries below are clearly labeled concept
-          demonstrations showing how MartEX would approach real operational challenges — client names, results, and
-          quotations will only appear once verified and approved.
+          Lichen MD, LIBERIA360, and Küü are products MartEX designed, built, and runs today — read how each one came
+          together. Alongside them, clearly labeled concept studies show how we would approach other common operational
+          challenges.
         </p>
       </div>
 
