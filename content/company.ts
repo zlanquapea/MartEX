@@ -30,7 +30,7 @@ export const contact = {
   social: {
     linkedin: "",
     x: "",
-    facebook: "",
+    facebook: "https://web.facebook.com/profile.php?id=100089630951216",
     instagram: "",
   },
 } as const;

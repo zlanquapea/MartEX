@@ -148,7 +148,7 @@ export function CaseStudyCard({ caseStudy }: { caseStudy: CaseStudy }) {
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <Tag className="bg-[var(--color-tech-blue)]/15 text-[var(--color-navy)] dark:text-[var(--color-off-white)]">
-              Concept solution
+              {caseStudy.kind === "product" ? "MartEX product" : "Concept solution"}
             </Tag>
             <span className="text-xs font-medium text-[var(--ink-muted)]">{caseStudy.industry}</span>
           </div>
@@ -161,7 +161,7 @@ export function CaseStudyCard({ caseStudy }: { caseStudy: CaseStudy }) {
           <p className="mt-2.5 text-sm leading-relaxed text-[var(--ink-muted)]">{caseStudy.summary}</p>
         </div>
         <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--cta)]">
-          View concept
+          {caseStudy.kind === "product" ? "Read case study" : "View concept"}
           <ArrowUpRight
             size={15}
             aria-hidden="true"
