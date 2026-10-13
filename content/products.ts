@@ -39,6 +39,15 @@ export const products: ProductSummary[] = [
       "One calm place for a team's conversations, tasks, projects, documents, and meetings — so everyone knows what matters today, who owns it, and what was decided.",
     accent: "var(--kuu)",
   },
+  {
+    slug: "pockaypos",
+    name: "PockayPOS",
+    category: "Point of Sale",
+    tagline: "Ring up a sale in seconds, from any counter.",
+    summary:
+      "A simple point-of-sale system for shops, restaurants, and kiosks — add items, take payment, and see what sold, all from one screen.",
+    accent: "var(--pockaypos)",
+  },
 ];
 
 export function getProductBySlug(slug: string) {
@@ -373,4 +382,161 @@ export const kuu = {
         "After a short grace period your workspace moves to the Free plan. Nothing is deleted; paid features pause until you pay again.",
     },
   ],
+};
+
+export type PockaySaleItem = { id: string; name: string; price: number };
+export type PockayStep = { title: string; description: string };
+export type PockayModule = { title: string; description: string };
+export type PockayModuleGroup = {
+  title: string;
+  modules: PockayModule[];
+  note?: string;
+  highlight?: { title: string; description: string };
+};
+
+/**
+ * PockayPOS's live site (pockaypos.com) is not reachable from this
+ * environment, so this is built from the real feature list supplied
+ * directly for this page, rewritten in plain language — not the live
+ * site's own copy. Nothing below goes beyond what was supplied.
+ */
+export const pockaypos = {
+  name: "PockayPOS",
+  eyebrow: "Point of Sale",
+  headline: "Ring up a sale in seconds, from any counter.",
+  whyEyebrow: "Built for how businesses here actually sell",
+  whyStatement: "One system. Both currencies. Every counter.",
+  whyDescription:
+    "Most point-of-sale systems assume one currency and a steady internet connection. PockayPOS is built around how shops actually operate day to day — pricing in US and Liberian dollars from one shared stock list, accepting Mobile Money, and continuing to work when the connection drops.",
+  overview:
+    "PockayPOS is a point-of-sale system for shops, restaurants, and kiosks — ring up sales in US or Liberian dollars, track stock as you buy and sell it, and see your numbers, all from one screen.",
+  website: "https://pockaypos.com",
+  heroPoints: ["Sells in USD and LRD from one inventory", "Keeps working when the internet doesn't", "Set up together with MartEX"],
+  demoCatalog: [
+    { id: "coffee", name: "Coffee", price: 2 },
+    { id: "pastry", name: "Pastry", price: 3 },
+    { id: "sandwich", name: "Sandwich", price: 6 },
+    { id: "water", name: "Water", price: 1 },
+    { id: "juice", name: "Juice", price: 2.5 },
+    { id: "muffin", name: "Muffin", price: 3.5 },
+  ] satisfies PockaySaleItem[],
+  demoBarcodes: {
+    "001": "coffee",
+    "002": "pastry",
+    "003": "sandwich",
+    "004": "water",
+    "005": "juice",
+    "006": "muffin",
+  } as Record<string, string>,
+  exampleExchangeRate: 190,
+  howItWorks: [
+    {
+      title: "Add items to the sale",
+      description: "Tap a product, or scan its barcode with a standard barcode scanner, to add it to the sale.",
+    },
+    {
+      title: "Take the payment",
+      description: "Charge the total in US dollars, Liberian dollars, or Mobile Money, and close out the sale.",
+    },
+    {
+      title: "See what sold",
+      description: "Every completed sale updates the day's totals automatically, broken down by currency.",
+    },
+  ] satisfies PockayStep[],
+  moduleGroups: [
+    {
+      title: "Selling, in either currency",
+      modules: [
+        {
+          title: "One inventory, two currencies",
+          description: "Price every product in Liberian or US dollars from the same shared stock list — no second product list to keep in sync.",
+        },
+        {
+          title: "You set the exchange rate",
+          description: "Managers set today's rate; the system handles the conversion and gives change back in either currency.",
+        },
+        {
+          title: "A receipt that doesn't change later",
+          description: "Every sale locks in its price, payment, and exchange rate at the moment it happened — permanently.",
+        },
+        {
+          title: "Scan or tap to check out",
+          description: "Use any standard barcode scanner, or tap products directly on the screen.",
+        },
+      ],
+      note: "Mobile Money accepted too: MTN and Orange Money payments are captured and reconciled against your statement.",
+      highlight: {
+        title: "Two ways to sign in",
+        description: "Managers sign in with their own email and password; cashiers clock in fast with their own code or PIN.",
+      },
+    },
+    {
+      title: "Buying and tracking stock",
+      modules: [
+        {
+          title: "Buy by the pack or carton",
+          description: "Receive wholesale stock, record what you paid in either currency, and see your estimated profit per item after expenses.",
+        },
+        {
+          title: "Know what you actually have",
+          description: "An auditable inventory that accounts for partial returns and damaged goods, not just what sold.",
+        },
+        {
+          title: "Suppliers and purchase orders",
+          description: "Track who you buy from, and receive a delivery even when it only arrives partially.",
+        },
+        {
+          title: "Let regulars buy on credit",
+          description: "Offer trusted customers credit, and track what they still owe and what they've repaid.",
+        },
+      ],
+    },
+    {
+      title: "Running day to day",
+      modules: [
+        {
+          title: "Shifts that balance themselves",
+          description: "Cashiers open and close their own till in both currencies; once reconciled, the count is locked in and a manager signs off independently.",
+        },
+        {
+          title: "Works even when the internet doesn't",
+          description: "Keep selling if the connection drops — sales queue safely and sync once you're back online, with any conflicts shown to you, never hidden.",
+        },
+        {
+          title: "Reports in the currency customers actually paid",
+          description: "See sales broken down by currency, plus the real cash and change in the drawer — not just what was rung up.",
+        },
+        {
+          title: "More than one location? One view of all of them",
+          description: "Assign staff to a location, transfer stock between locations, and see combined reports across your whole business.",
+        },
+      ],
+      note: "Backups are validated before they're restored, and every held bill, sale, and receipt stays on record.",
+      highlight: {
+        title: "Check in from anywhere",
+        description: "Pocket Insights gives owners a simple, read-only summary view for checking in on the go.",
+      },
+    },
+  ] satisfies PockayModuleGroup[],
+  trustPoints: [
+    "Reconciliations are locked in once approved — never quietly edited",
+    "Backups are checked before they're restored",
+    "If you're offline, conflicts are shown to you, never silently overwritten",
+  ],
+  pricing: {
+    amount: 20,
+    period: "month",
+    note: "One flat price per business. No per-register or per-user fees.",
+    includes: [
+      "Dual-currency sales (USD & LRD) from one shared inventory",
+      "Mobile Money (MTN & Orange) accepted and reconciled",
+      "Works offline, with safe sync once you're back online",
+      "Setup and training done with you by MartEX",
+    ],
+  },
+  contact: {
+    web: "martex.com.lr",
+    email: "info@orith.tech",
+    phone: "+231 771 9111 95",
+  },
 };
