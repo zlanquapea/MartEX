@@ -82,6 +82,10 @@
   --shadow-elevated: 0 24px 70px -20px rgb(13 23 45 / 0.18);
   /* Küü's own brand terracotta, for its product page; lightened in dark mode for contrast. */
   --kuu: #b5461b;
+  /* PockayPOS's live site isn't reachable from this environment to source its
+     real brand color, so this is a chosen, distinct accent for its product
+     page — swap for the real brand color once available. */
+  --pockaypos: #0e8f6f;
   color-scheme: light;
 }
 
@@ -96,6 +100,7 @@
   --cta-ink: #07101f;
   --shadow-elevated: 0 24px 70px -20px rgb(0 0 0 / 0.55);
   --kuu: #ea9c5e;
+  --pockaypos: #3dbf96;
   color-scheme: dark;
 }
 
